@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:h2:~/test
+    platform: h2
+    driverClassName: org.h2.Driver
+    schema: classpath:db/init.sql
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /console
+      settings:
+        trace: false
+        web-allow-others: false
