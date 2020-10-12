@@ -1,6 +1,6 @@
 stages:
   - maven-build
-  - maven-test
+  - maven-uni-test
 
 maven-build:
   stage: maven-build
@@ -14,8 +14,8 @@ maven-build:
     paths:
       - .m2
 
-maven-test:
-  stage: maven-test
+maven-uni-test:
+  stage: maven-uni-test
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - master@baixingwang/devops-user-service
@@ -25,3 +25,6 @@ maven-test:
   cache:
     paths:
       - .m2
+
+
+
