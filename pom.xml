@@ -13,17 +13,6 @@
         <version>2.3.3.RELEASE</version>
     </parent>
 
-    <repositories>
-        <repository>
-            <id>baixing-snapshot</id>
-            <url>http://nexus.baixing.cn/repository/maven-snapshots/</url>
-        </repository>
-        <repository>
-            <id>baixing-release</id>
-            <url>http://nexus.baixing.cn/repository/maven-releases/</url>
-        </repository>
-    </repositories>
-
     <properties>
         <!-- Plugin的属性 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
