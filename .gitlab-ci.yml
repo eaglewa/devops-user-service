@@ -1,5 +1,6 @@
 stages:
   - maven-build
+  - maven-test
 
 maven-build:
   stage: maven-build
@@ -9,6 +10,9 @@ maven-build:
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U compile
+  cache:
+    paths:
+      - .m2
 
 maven-test:
   stage: maven-test
