@@ -1,0 +1,11 @@
+stages:
+  - maven-build
+
+maven-build:
+  stage: maven-build
+  image: maven:3.6.3-adoptopenjdk-11
+  only:
+    - master@devcloud/devcloud-system
+  script:
+    - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
+    - mvn -U compile
