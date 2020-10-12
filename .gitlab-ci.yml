@@ -25,6 +25,3 @@ maven-uni-test:
   cache:
     paths:
       - .m2
-
-
-
