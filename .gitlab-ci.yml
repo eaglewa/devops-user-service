@@ -9,3 +9,12 @@ maven-build:
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U compile
+
+maven-test:
+  stage: maven-test
+  image: maven:3.6.3-adoptopenjdk-11
+  only:
+    - master@baixingwang/devops-user-service
+  script:
+    - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
+    - mvn -U test
