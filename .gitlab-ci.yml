@@ -1,6 +1,12 @@
+variables:
+  REGISTRY_BASE: registry.gitlab.com/baixingwang/devops-user-service
+  IMAGE_REF: $REGISTRY_BASE:$CI_PIPELINE_ID
+
+
 stages:
   - maven-build
   - maven-uni-test
+  - docker-build
 
 maven-build:
   stage: maven-build
@@ -26,5 +32,14 @@ maven-uni-test:
     paths:
       - .m2
 
-
-
+docker-build:
+  image: docker
+  stage: docker-build
+  script:
+    - docker images
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
+    - docker build -t $IMAGE_REF .
+    - docker push $IMAGE_REF
+    - docker rmi $IMAGE_REF
+  only:
+    - master@baixingwang/devops-user-service
