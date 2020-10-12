@@ -36,7 +36,6 @@ docker-build:
   image: docker:19.03.0-dind
   stage: docker-build
   script:
-    - DOCKER_HOST=tcp://localhost:2375
     - docker images
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t $IMAGE_REF .
