@@ -37,9 +37,11 @@ docker-build:
   stage: docker-build
   script:
     - docker images
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t $IMAGE_REF .
     - docker push $IMAGE_REF
     - docker rmi $IMAGE_REF
   only:
     - master@baixingwang/devops-user-service
+  tags:
+    - gitlab-org-docker
