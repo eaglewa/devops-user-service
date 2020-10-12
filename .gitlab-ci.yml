@@ -33,7 +33,7 @@ maven-uni-test:
       - .m2
 
 docker-build:
-  image: docker
+  image: docker:19.03.0-dind
   stage: docker-build
   script:
     - DOCKER_HOST=tcp://localhost:2375
