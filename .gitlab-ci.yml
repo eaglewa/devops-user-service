@@ -21,4 +21,7 @@ maven-test:
     - master@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
-    - mvn -U test
+    - mvn clean test && cat target/site/jacoco/index.html
+  cache:
+    paths:
+      - .m2
