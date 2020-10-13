@@ -157,12 +157,12 @@
                         </configuration>
                     </execution>
                     <!--这个check:对代码进行检测，控制项目构建成功还是失败-->
-                    <execution>
-                        <id>check</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>check</id>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
