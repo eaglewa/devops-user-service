@@ -43,13 +43,14 @@ maven-package:
   artifacts:
     paths:
       - target/app.jar
-    expire_in: 3m
+    expire_in: 12h
   cache:
     paths:
       - .m2
 
 docker-build:
   stage: docker-build
+  image: docker
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t $IMAGE_REF .
@@ -57,3 +58,5 @@ docker-build:
     - docker rmi $IMAGE_REF
   only:
     - dev@baixingwang/devops-user-service
+  tags:
+    - baixingwang
