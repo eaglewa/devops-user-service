@@ -7,12 +7,15 @@ stages:
   - package
   - build
   - deploy
+  - intergrateTest
+  - stressTest
 
 compile:
   stage: compile
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
+    - dx-test@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U compile
@@ -110,6 +113,18 @@ deploy to dev:
     name: dev
     url: http://dev-devops.baixing.cn:8088
 
+smoke test:
+  stage: intergrateTest
+  only:
+    - dev@baixingwang/devops-user-service
+    - dx-test@baixingwang/devops-user-service
+  dependencies:
+    - deploy to dev
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+    #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
 deploy to test:
   stage: deploy
   image:
@@ -121,6 +136,29 @@ deploy to test:
   environment:
     name: test
     url: http://test-devops.baixing.cn:8088
+
+integrate test:
+  stage: intergrateTest
+  only:
+    - test@baixingwang/devops-user-service
+  dependencies:
+    - deploy to test
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+    #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
+stress test:
+  stage: stressTest
+  only:
+    - test@baixingwang/devops-user-service
+  dependencies:
+    - deploy to test
+  script:
+    - testResult=$(curl -s www.baidu.com) #改为压测地址
+    - echo ${testResult} ;
+  #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
 
 deploy to stg:
   stage: deploy
@@ -134,6 +172,18 @@ deploy to stg:
     name: stg
     url: http://stg-devops.baixing.cn:8088
 
+online test:
+  stage: intergrateTest
+  only:
+    - release@baixingwang/devops-user-service
+  dependencies:
+    - deploy to stg
+
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+  #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
 deploy to prod:
   stage: deploy
   image:
@@ -145,3 +195,4 @@ deploy to prod:
   environment:
     name: prod
     url: http://prod-devops.baixing.cn:8088/
+
