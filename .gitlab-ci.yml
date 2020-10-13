@@ -40,7 +40,7 @@ sonar:
     - dev@baixingwang/devops-user-service
   script:
     - export SONAR_USER_HOME=$PWD/.sonar
-    - mvn clean install sonar:sonar
+    - mvn sonar:sonar
       -Dmaven.test.skip=true
       -Dsonar.host.url=http://39.100.144.36
       -Dsonar.projectKey=devops-user-service
