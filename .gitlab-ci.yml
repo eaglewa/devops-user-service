@@ -47,8 +47,6 @@ sonar:
       -Dsonar.dynamicAnalysis=reuseReports
       -Dsonar.jacoco.reportMissing.force.zero=true
       -Dsonar.jacoco.reportPaths=$PWD/devops-user-service/coverage-reports/jacoco.exec
-#      -Dsonar.coverage.exclusions=src/main/java/com/baixing/ms/trade/service/utils/mq/**/*,src/main/java/com/baixing/ms/trade/service/internal/impl/TradeRepoServiceImpl.java,src/main/java/com/baixing/ms/trade/service/v2/trade/impl/TradeRepositoryImpl.java,src/main/java/com/baixing/ms/trade/service/v2/ObjectUtilsV2.java,src/main/java/com/baixing/ms/trade/common/model/**/*,src/main/java/com/baixing/ms/trade/service/recovery/**/*
-#      -Dsonar.exclusions=src/main/java/com/baixing/ms/trade/service/coupon/impl/thrift/**/*,src/main/java/com/baixing/ms/trade/service/performance/impl/thrift/**/*
   artifacts:
     paths:
       - target/app.jar
@@ -56,7 +54,6 @@ sonar:
   cache:
     paths:
       - .m2
-
 
 maven:package:
   stage: package

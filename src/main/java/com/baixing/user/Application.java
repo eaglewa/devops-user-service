@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application {
     
     public static void main(String[] args) {
+        System.getProperties().setProperty("logging.file", "log/devops-user-service");
         SpringApplication.run(Application.class, args);
     }
     
