@@ -41,6 +41,7 @@ sonar:
   script:
     - export SONAR_USER_HOME=$PWD/.sonar
     - mvn clean install sonar:sonar
+      -Dmaven.test.skip=true
       -Dsonar.host.url=http://39.100.144.36
       -Dsonar.projectKey=devops-user-service
       -Dsonar.dynamicAnalysis=reuseReports
@@ -57,7 +58,6 @@ sonar:
       - .m2
 
 
-
 maven:package:
   stage: package
   image: maven:3.6.3-adoptopenjdk-11
@@ -65,7 +65,7 @@ maven:package:
     - dev@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
-    - mvn -U package
+    - mvn -U package -Dmaven.test.skip=true
   artifacts:
     paths:
       - target/app.jar
