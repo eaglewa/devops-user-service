@@ -3,14 +3,12 @@ variables:
   IMAGE_REF: $REGISTRY_BASE:$CI_PIPELINE_ID
 
 stages:
-  - maven-build
-  - maven-uni-test
-  - maven-package
-  - docker-build
+  - build
+  - test
   - deploy
 
-maven-build:
-  stage: maven-build
+maven build:
+  stage: build
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
@@ -21,8 +19,8 @@ maven-build:
     paths:
       - .m2
 
-maven-uni-test:
-  stage: maven-uni-test
+maven uni test:
+  stage: test
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
@@ -33,8 +31,8 @@ maven-uni-test:
     paths:
       - .m2
 
-maven-package:
-  stage: maven-package
+maven package:
+  stage: build
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
@@ -49,8 +47,8 @@ maven-package:
     paths:
       - .m2
 
-docker-build:
-  stage: docker-build
+image build:
+  stage: build
   image: docker
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
@@ -64,7 +62,9 @@ docker-build:
 
 deploy to dev:
   stage: deploy
-  image: kubectl
+  image:
+    name: bitnami/kubectl:1.14
+    entrypoint: [""]
   script: kubectl set image deployment/devops-user-service devops-user-service=$IMAGE_REF
   environment:
     name: dev
