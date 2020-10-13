@@ -94,4 +94,4 @@ deploy to dev:
   script: kubectl set image deployment/dev-devops-user-service devops-user-service=$IMAGE_REF
   environment:
     name: dev
-    url: https://staging.example.com/
+    url: http://dev-devops.baixing.cn:8088/
