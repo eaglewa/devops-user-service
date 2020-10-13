@@ -4,8 +4,9 @@ variables:
 
 stages:
   - compile
-  - test
-  - packege
+  - uni-test
+  - maven-package
+  - image-package
   - deploy-dev
 
 compile:
