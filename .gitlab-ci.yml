@@ -23,7 +23,7 @@ compile:
     paths:
       - .m2
 
-uni test:
+uni-test:
   stage: test
   image: maven:3.6.3-adoptopenjdk-11
   only:
@@ -62,6 +62,8 @@ sonar:
       -Dsonar.jacoco.reportMissing.force.zero=true
       -Dsonar.jacoco.reportPaths=$PWD/devops-user-service/coverage-reports/jacoco.exec
   allow_failure: true
+  dependencies:
+    - uni-test
 
 maven package:
   stage: package
