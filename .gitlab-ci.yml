@@ -1,6 +1,5 @@
 variables:
   REGISTRY_BASE: registry.gitlab.com/baixingwang/devops-user-service
-  IMAGE_REF: $REGISTRY_BASE:$CI_PIPELINE_ID
 
 stages:
   - compile
@@ -8,16 +7,19 @@ stages:
   - package
   - build
   - deploy
+  - intergrateTest
+  - stressTest
 
 compile:
   stage: compile
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
+    - dx-test@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U compile
-    - VERSION=$(mvn --non-recursive help:evaluate -Dexpression=project.version | grep -v '\[.*')
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)')
     - echo $VERSION
   cache:
     paths:
@@ -67,6 +69,8 @@ sonar:
 
 maven package:
   stage: package
+  dependencies:
+    - compile
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
@@ -81,14 +85,19 @@ maven package:
     paths:
       - .m2
 
-build:
+docker build:
   stage: build
+  dependencies:
+    - maven package
   image: docker
   script:
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)')
+    - echo $VERSION
+    - export DEV_IMAGE=$REGISTRY_BASE:$VERSION-$CI_PIPELINE_ID
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker build -t $IMAGE_REF .
-    - docker push $IMAGE_REF
-    - docker rmi $IMAGE_REF
+    - docker build -t $DEV_IMAGE .
+    - docker push $DEV_IMAGE
+    - docker rmi $DEV_IMAGE
   only:
     - dev@baixingwang/devops-user-service
   tags:
@@ -99,36 +108,83 @@ deploy to dev:
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
-  script: kubectl set image deployment/dev-devops-user-service devops-user-service=$IMAGE_REF
+  script: kubectl set image deployment/dev-devops-user-service devops-user-service=$DEV_IMAGE
   only:
     - dev@baixingwang/devops-user-service
   environment:
     name: dev
     url: http://dev-devops.baixing.cn:8088
 
+smoke test:
+  stage: intergrateTest
+  only:
+    - dev@baixingwang/devops-user-service
+    - dx-test@baixingwang/devops-user-service
+  dependencies:
+    - deploy to dev
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+    #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
 deploy to test:
   stage: deploy
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
-  script: kubectl set image deployment/test-devops-user-service devops-user-service=$IMAGE_REF
+  script: kubectl set image deployment/test-devops-user-service devops-user-service=$DEV_IMAGE
   only:
     - test@baixingwang/devops-user-service
   environment:
     name: test
     url: http://test-devops.baixing.cn:8088
 
+integrate test:
+  stage: intergrateTest
+  only:
+    - test@baixingwang/devops-user-service
+  dependencies:
+    - deploy to test
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+    #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
+stress test:
+  stage: stressTest
+  only:
+    - test@baixingwang/devops-user-service
+  dependencies:
+    - deploy to test
+  script:
+    - testResult=$(curl -s www.baidu.com) #改为压测地址
+    - echo ${testResult} ;
+  #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
+
 deploy to stg:
   stage: deploy
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
-  script: kubectl set image deployment/stg-devops-user-service devops-user-service=$IMAGE_REF
+  script: kubectl set image deployment/stg-devops-user-service devops-user-service=$DEV_IMAGE
   only:
     - release@baixingwang/devops-user-service
   environment:
     name: stg
     url: http://stg-devops.baixing.cn:8088
+
+online test:
+  stage: intergrateTest
+  only:
+    - release@baixingwang/devops-user-service
+  dependencies:
+    - deploy to stg
+
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+  #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
 
 deploy to prod:
   stage: deploy
@@ -141,3 +197,4 @@ deploy to prod:
   environment:
     name: prod
     url: http://prod-devops.baixing.cn:8088/
+
