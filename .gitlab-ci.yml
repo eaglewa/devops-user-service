@@ -150,7 +150,7 @@ deploy to prod:
 smoke-test:
   stage: smoke-test
   dependencies:
-    - deploy
+    - test
   script:
     - testResult=$(curl -s www.baidu.com)
     - echo ${testResult} ;
