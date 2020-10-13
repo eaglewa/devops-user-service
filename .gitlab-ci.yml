@@ -3,21 +3,19 @@ variables:
   IMAGE_REF: $REGISTRY_BASE:$CI_PIPELINE_ID
 
 stages:
-  - compile
-  - test
-  - package
   - build
+  - test
   - deploy
 
 compile:
-  stage: compile
+  stage: build
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U compile
-    - VERSION=$(mvn --non-recursive help:evaluate -Dexpression=project.version | grep -v '\[.*')
+    - VERSION = grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)'
     - echo $VERSION
   cache:
     paths:
@@ -64,7 +62,9 @@ sonar:
   allow_failure: true
 
 maven package:
-  stage: package
+  stage: build
+  dependencies:
+    - compile
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
@@ -79,8 +79,10 @@ maven package:
     paths:
       - .m2
 
-build:
+docker build:
   stage: build
+  dependencies:
+    - maven package
   image: docker
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
