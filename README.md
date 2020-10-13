@@ -150,3 +150,45 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 采用Gitlab Runner进行构建，并行构建的时候自动化选择不同的Runner进行，以下两个构建阶段采用了不同的Runner进行
 
 ![image-20201013120348690](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnkpwpu96j328m0e0aeo.jpg)
+
+## 6、持续集成
+
+### 6.1、按需集成
+
+项目团队成员提交代码变更后自动触发CI流程，以下是两位不同的项目成员触发的CI流程
+
+![image-20201013134852305](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnnr7t6ulj323e07stb2.jpg)
+
+### 6.2、触发机制
+
+提交代码变更后后自动触发，目前只允许研发人员提交dev分支，持续集成只适配dev分支
+
+![image-20201013135654526](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnnzkyvorj31b20l441d.jpg)
+
+### 6.3、集成结果推送
+
+流水线执行结果通过邮件和企业微信到达项目成员，如果构建失败，通过详情信息直接关联到对应的构建任务，查看失败原因。以下是企业微信的相关截图
+
+- 构建成功
+
+  ![image-20201013140419174](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjno7akl4rj30us0aw40c.jpg)
+
+  ![image-20201013140533768](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjno8lhx21j312d0u0dyg.jpg)
+
+- 构建失败
+
+  ![image-20201013140604154](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjno94dnryj30us0jen2v.jpg)
+
+  ![image-20201013140657049](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnoa1d5zfj31u70u0hdt.jpg)
+
+### 6.4、自动化测试
+
+每次代码变更触发持续集成时，都会进行自动化单元测试，在流水线配置时单独配置一个单测阶段
+
+![image-20201013141148656](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnof3i9t4j31bs0kewhi.jpg)
+
+以下是执行日志输出和测试结果
+
+![image-20201013141241485](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnog0emwrj31os0u0n85.jpg)
+
+![image-20201013141301548](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnogcqnsqj31ei0bognl.jpg)
