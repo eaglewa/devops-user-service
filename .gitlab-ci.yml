@@ -6,7 +6,7 @@ stages:
   - compile
   - test
   - package
-  - deploy-dev
+  - deploy:dev
 
 compile:
   stage: compile
@@ -20,7 +20,7 @@ compile:
     paths:
       - .m2
 
-uni-test:
+uni:test:
   stage: test
   image: maven:3.6.3-adoptopenjdk-11
   only:
@@ -32,7 +32,7 @@ uni-test:
     paths:
       - .m2
 
-maven-package:
+maven:package:
   stage: package
   image: maven:3.6.3-adoptopenjdk-11
   only:
@@ -48,10 +48,10 @@ maven-package:
     paths:
       - .m2
 
-image-package:
+image:package:
   stage: package
+  needs: ["maven:package"]
   image: docker
-  needs: ["maven-package"]
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t $IMAGE_REF .
@@ -62,8 +62,8 @@ image-package:
   tags:
     - baixingwang
 
-deploy-dev:
-  stage: deploy-dev
+deploy:dev:
+  stage: deploy:dev
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
