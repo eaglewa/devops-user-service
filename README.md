@@ -43,6 +43,9 @@
 
 ![image-20201013101037123](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnhg56ho4j31v20i6tc4.jpg)
 
+同时可以看到该项目中代码提交的统计数据
+
+![image-20201013170014708](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjntadoh42j31280f00ti.jpg)
 
 ## 3、代码管理
 
