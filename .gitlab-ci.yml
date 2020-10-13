@@ -64,8 +64,8 @@ docker-build:
 
 deploy to dev:
   stage: deploy
-  iamge: kubectl
-  script: kubectl get ns
+  image: kubectl
+  script: kubectl set image deployment/devops-user-service devops-user-service=$IMAGE_REF
   environment:
     name: dev
     url: https://staging.example.com/
