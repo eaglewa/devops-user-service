@@ -77,7 +77,7 @@
 
 - 项目依赖制品库：nexus
 
-  ![image-20201013104618819](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnih9tftfj32l40la7b8.jpg)
+  ![image-20201013113037369](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnjrdst8rj32ky0qcwmv.jpg)
 
 - Docker镜像制品库：Gitlab Registry
 
