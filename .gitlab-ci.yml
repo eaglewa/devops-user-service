@@ -34,6 +34,7 @@ maven-uni-test:
 
 docker-build:
   stage: docker-build
+  image: docker
   script:
     - docker images
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
@@ -42,3 +43,5 @@ docker-build:
     - docker rmi $IMAGE_REF
   only:
     - master@baixingwang/devops-user-service
+  tags:
+    - baixingwang
