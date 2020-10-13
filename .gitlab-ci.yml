@@ -7,6 +7,8 @@ stages:
   - package
   - build
   - deploy
+  - intergrateTest
+  - stressTest
 
 compile:
   stage: compile
@@ -112,12 +114,12 @@ deploy to dev:
     url: http://dev-devops.baixing.cn:8088
 
 smoke test:
-  stage: test
+  stage: intergrateTest
   only:
     - dev@baixingwang/devops-user-service
     - dx-test@baixingwang/devops-user-service
   dependencies:
-    - deploy
+    - deploy to dev
   script:
     - testResult=$(curl -s www.baidu.com)
     - echo ${testResult} ;
@@ -136,22 +138,22 @@ deploy to test:
     url: http://test-devops.baixing.cn:8088
 
 integrate test:
-  stage: test
+  stage: intergrateTest
   only:
     - test@baixingwang/devops-user-service
   dependencies:
-    - deploy
+    - deploy to test
   script:
     - testResult=$(curl -s www.baidu.com)
     - echo ${testResult} ;
     #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
 
 stress test:
-  stage: test
+  stage: stressTest
   only:
     - test@baixingwang/devops-user-service
   dependencies:
-    - deploy
+    - deploy to test
   script:
     - testResult=$(curl -s www.baidu.com) #改为压测地址
     - echo ${testResult} ;
@@ -171,11 +173,11 @@ deploy to stg:
     url: http://stg-devops.baixing.cn:8088
 
 online test:
-  stage: test
+  stage: intergrateTest
   only:
     - release@baixingwang/devops-user-service
   dependencies:
-    - deploy
+    - deploy to stg
 
   script:
     - testResult=$(curl -s www.baidu.com)
