@@ -7,7 +7,7 @@ stages:
   - test
   - package
   - build
-  - deploy:dev
+  - deploy
 
 compile:
   stage: compile
@@ -62,12 +62,12 @@ build:
   tags:
     - baixingwang
 
-deploy:dev:
-  stage: deploy:dev
+deploy to dev:
+  stage: deploy
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
-  script: kubectl set image deployment/devops-user-service devops-user-service=$IMAGE_REF
+  script: kubectl set image deployment/dev-devops-user-service devops-user-service=$IMAGE_REF
   environment:
     name: dev
     url: https://staging.example.com/
