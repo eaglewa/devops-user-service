@@ -14,6 +14,7 @@ compile:
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
+    - dx-test@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U compile
@@ -37,6 +38,18 @@ uni test:
   cache:
     paths:
       - .m2
+
+smoke-test:
+  stage: smoke-test
+  only:
+    - dev@baixingwang/devops-user-service
+    - dx-test@baixingwang/devops-user-service
+  dependencies:
+    - compile
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+    - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
 
 sonar:
   image: maven:3.6.3-adoptopenjdk-11
@@ -147,11 +160,3 @@ deploy to prod:
     name: prod
     url: http://prod-devops.baixing.cn:8088/
 
-smoke-test:
-  stage: smoke-test
-  dependencies:
-    - test
-  script:
-    - testResult=$(curl -s www.baidu.com)
-    - echo ${testResult} ;
-    - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
