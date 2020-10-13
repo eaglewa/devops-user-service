@@ -51,7 +51,6 @@ maven-package:
 docker-build:
   stage: docker-build
   script:
-    - docker images
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t $IMAGE_REF .
     - docker push $IMAGE_REF
