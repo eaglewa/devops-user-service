@@ -3,12 +3,13 @@ variables:
   IMAGE_REF: $REGISTRY_BASE:$CI_PIPELINE_ID
 
 stages:
-  - build
+  - compile
   - test
-  - deploy
+  - packege
+  - deploy-dev
 
-maven build:
-  stage: build
+compile:
+  stage: compile
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
@@ -19,7 +20,7 @@ maven build:
     paths:
       - .m2
 
-maven uni test:
+uni-test:
   stage: test
   image: maven:3.6.3-adoptopenjdk-11
   only:
@@ -31,8 +32,8 @@ maven uni test:
     paths:
       - .m2
 
-maven package:
-  stage: build
+maven-package:
+  stage: package
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
@@ -47,8 +48,8 @@ maven package:
     paths:
       - .m2
 
-image build:
-  stage: build
+image-package:
+  stage: package
   image: docker
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
@@ -60,8 +61,8 @@ image build:
   tags:
     - baixingwang
 
-deploy to dev:
-  stage: deploy
+deploy-dev:
+  stage: deploy-dev
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
