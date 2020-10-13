@@ -6,6 +6,7 @@ stages:
   - compile
   - test
   - package
+  - build
   - deploy:dev
 
 compile:
@@ -48,10 +49,8 @@ maven:package:
     paths:
       - .m2
 
-image:package:
-  stage: deploy:dev
-  needs:
-    - maven:package
+build:
+  stage: build
   image: docker
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
