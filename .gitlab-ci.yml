@@ -5,6 +5,7 @@ variables:
 stages:
   - maven-build
   - maven-uni-test
+  - maven-package
   - docker-build
 
 maven-build:
@@ -27,6 +28,22 @@ maven-uni-test:
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn clean test && cat target/site/jacoco/index.html
+  cache:
+    paths:
+      - .m2
+
+maven-package:
+  stage: maven-package
+  image: maven:3.6.3-adoptopenjdk-11
+  only:
+    - dev@baixingwang/devops-user-service
+  script:
+    - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
+    - mvn -U package
+  artifacts:
+    paths:
+      - target/app.jar
+    expire_in: 3m
   cache:
     paths:
       - .m2
