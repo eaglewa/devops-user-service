@@ -186,7 +186,7 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 6.4、自动化测试
 
-每次代码变更触发持续集成时，都会进行自动化单元测试，在流水线配置时单独配置一个单测阶段
+每次代码变更触发持续集成时，都会进行自动化单元测试，在流水线配置时单独配置一个单测阶段 
 
 ![image-20201013141148656](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnof3i9t4j31bs0kewhi.jpg)
 

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <springProperty name="springAppName" scope="context" source="spring.application.name"/>
+    <springProperty name="logFile" scope="context" source="logging.file" defaultValue="log/${springAppName}"/>
+    <springProperty name="env" scope="context" source="spring.profiles"/>
+
+
+    <!-- Appender to log to console -->
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="console">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- Minimum logging level to be presented in the console logs-->
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>
+               %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{48}:%line - %msg%n
+            </pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="jsonFile">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 归档文件名格式 -->
+            <fileNamePattern>${logFile}.%d{yyyy-MM-dd}.json</fileNamePattern>
+            <!-- 保留7个归档文件 -->
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <timeZone>Asia/Shanghai</timeZone>
+                </timestamp>
+                <pattern>
+                    <pattern>
+                        {
+                        "env": "${env:-}",
+                        "service": "${springAppName:-}",
+                        "level": "%level",
+                        "trace": "%X{X-B3-TraceId:-}",
+                        "span": "%X{X-B3-SpanId:-}",
+                        "parent": "%X{X-B3-ParentSpanId:-}",
+                        "requestId": "%X{x-request-id:-}",
+                        "pid": "${PID:-}",
+                        "host": "${HOSTNAME}",
+                        "thread": "%thread",
+                        "lineNumber": "%line",
+                        "class": "%logger{40}",
+                        "message": "%message"
+                        }
+                    </pattern>
+                </pattern>
+                <logstashMarkers/>
+                <stackTrace>
+                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                        <maxDepthPerThrowable>30</maxDepthPerThrowable>
+                        <maxLength>4096</maxLength>
+                        <shortenedClassNameLength>20</shortenedClassNameLength>
+                        <!-- generated class names -->
+                        <exclude>\$\$FastClassByCGLIB\$\$</exclude>
+                        <exclude>\$\$EnhancerBySpringCGLIB\$\$</exclude>
+                        <exclude>^sun\.reflect\..*\.invoke</exclude>
+                        <!-- JDK internals -->
+                        <exclude>^com\.sun\.</exclude>
+                        <exclude>^sun\.net\.</exclude>
+                        <!-- dynamic invocation -->
+                        <exclude>^net\.sf\.cglib\.proxy\.MethodProxy\.invoke</exclude>
+                        <exclude>^org\.springframework\.cglib\.</exclude>
+                        <exclude>^org\.springframework\.transaction\.</exclude>
+                        <exclude>^org\.springframework\.validation\.</exclude>
+                        <exclude>^org\.springframework\.app\.</exclude>
+                        <exclude>^org\.springframework\.aop\.</exclude>
+                        <exclude>^java\.lang\.reflect\.Method\.invoke</exclude>
+                        <!-- Spring plumbing -->
+                        <exclude>^org\.springframework\.ws\..*\.invoke</exclude>
+                        <exclude>^org\.springframework\.ws\.transport\.</exclude>
+                        <exclude>^org\.springframework\.ws\.soap\.saaj\.SaajSoapMessage\.</exclude>
+                        <exclude>^org\.springframework\.ws\.client\.core\.WebServiceTemplate\.</exclude>
+                        <exclude>^org\.springframework\.web\.filter\.</exclude>
+                        <!-- Tomcat internals -->
+                        <exclude>^org\.apache\.tomcat\.</exclude>
+                        <exclude>^org\.apache\.catalina\.</exclude>
+                        <exclude>^org\.apache\.coyote\.</exclude>
+                        <exclude>^java\.util\.concurrent\.ThreadPoolExecutor\.runWorker</exclude>
+                        <exclude>^java\.lang\.Thread\.run$</exclude>
+                        <rootCauseFirst>true</rootCauseFirst>
+                    </throwableConverter>
+                </stackTrace>
+            </providers>
+        </encoder>
+    </appender>
+
+
+    <appender name="async" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>512</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="jsonFile"/>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="console"/>
+        <appender-ref ref="async"/>
+    </root>
+
+    <logger level="WARN" name="com.netflix"/>
+    <logger level="WARN" name="org.springframework.cloud"/>
+
+</configuration>
