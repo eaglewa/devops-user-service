@@ -17,7 +17,7 @@ compile:
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U compile
-    - VERSION = grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)'
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)')
     - echo $VERSION
   cache:
     paths:
