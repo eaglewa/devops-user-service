@@ -1,6 +1,5 @@
 variables:
   REGISTRY_BASE: registry.gitlab.com/baixingwang/devops-user-service
-  IMAGE_REF: $REGISTRY_BASE:$CI_PIPELINE_ID
 
 stages:
   - compile
@@ -87,10 +86,11 @@ docker build:
     - maven package
   image: docker
   script:
+    - DEV_IMAGE=$REGISTRY_BASE:$VERSION-$CI_PIPELINE_ID
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker build -t $IMAGE_REF .
-    - docker push $IMAGE_REF
-    - docker rmi $IMAGE_REF
+    - docker build -t $DEV_IMAGE .
+    - docker push $DEV_IMAGE
+    - docker rmi $DEV_IMAGE
   only:
     - dev@baixingwang/devops-user-service
   tags:
@@ -101,7 +101,7 @@ deploy to dev:
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
-  script: kubectl set image deployment/dev-devops-user-service devops-user-service=$IMAGE_REF
+  script: kubectl set image deployment/dev-devops-user-service devops-user-service=$DEV_IMAGE
   only:
     - dev@baixingwang/devops-user-service
   environment:
@@ -113,7 +113,7 @@ deploy to test:
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
-  script: kubectl set image deployment/test-devops-user-service devops-user-service=$IMAGE_REF
+  script: kubectl set image deployment/test-devops-user-service devops-user-service=$DEV_IMAGE
   only:
     - test@baixingwang/devops-user-service
   environment:
@@ -125,7 +125,7 @@ deploy to stg:
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
-  script: kubectl set image deployment/stg-devops-user-service devops-user-service=$IMAGE_REF
+  script: kubectl set image deployment/stg-devops-user-service devops-user-service=$DEV_IMAGE
   only:
     - release@baixingwang/devops-user-service
   environment:
