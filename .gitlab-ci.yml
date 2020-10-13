@@ -139,4 +139,4 @@ deploy to prod:
     - prod@baixingwang/devops-user-service
   environment:
     name: prod
-    url: http://prod-devops.baixing.cn:8088
+    url: http://prod-devops.baixing.cn:8088/
