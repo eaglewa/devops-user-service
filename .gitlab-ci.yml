@@ -4,7 +4,6 @@ variables:
 stages:
   - compile
   - test
-  - smoke-test
   - package
   - build
   - deploy
@@ -38,18 +37,6 @@ uni test:
   cache:
     paths:
       - .m2
-
-smoke-test:
-  stage: smoke-test
-  only:
-    - dev@baixingwang/devops-user-service
-    - dx-test@baixingwang/devops-user-service
-  dependencies:
-    - compile
-  script:
-    - testResult=$(curl -s www.baidu.com)
-    - echo ${testResult} ;
-    - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
 
 sonar:
   image: maven:3.6.3-adoptopenjdk-11
@@ -124,6 +111,18 @@ deploy to dev:
     name: dev
     url: http://dev-devops.baixing.cn:8088
 
+smoke test:
+  stage: test
+  only:
+    - dev@baixingwang/devops-user-service
+    - dx-test@baixingwang/devops-user-service
+  dependencies:
+    - deploy to dev
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+    #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
 deploy to test:
   stage: deploy
   image:
@@ -136,6 +135,29 @@ deploy to test:
     name: test
     url: http://test-devops.baixing.cn:8088
 
+integrate test:
+  stage: test
+  only:
+    - test@baixingwang/devops-user-service
+  dependencies:
+    - deploy to test
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+    #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
+stress test:
+  stage: test
+  only:
+    - test@baixingwang/devops-user-service
+  dependencies:
+    - deploy to test
+  script:
+    - testResult=$(curl -s www.baidu.com) #改为压测地址
+    - echo ${testResult} ;
+  #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
+
 deploy to stg:
   stage: deploy
   image:
@@ -147,6 +169,18 @@ deploy to stg:
   environment:
     name: stg
     url: http://stg-devops.baixing.cn:8088
+
+online test:
+  stage: test
+  only:
+    - release@baixingwang/devops-user-service
+  dependencies:
+    - deploy to stg
+
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+  #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
 
 deploy to prod:
   stage: deploy
