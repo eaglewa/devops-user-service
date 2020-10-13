@@ -107,3 +107,46 @@
  代码中配置仓库地址，确保对应的依赖从制品库中进行下载，参考【pom.xml】
 ![image-20201013104735168](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjniilliu3j31kr0u0tdq.jpg)
 
+## 5、构建方式
+
+### 5.1、自动化构建脚本
+
+本次自动化构建以来【Gitlab Runner】进行，相关脚本参考项目路径下的【.gitlab-ci.yml】:
+
+https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
+
+![image-20201013114339294](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnk4xmlwgj31420u0q8f.jpg)
+
+### 5.2、模块级别复用
+
+在整个CI流程中，存在两种级别的复用：
+
+- 依赖JAR包的服务，采用CI缓存进行实现，避免每次都下载依赖，下图说明缓存生效
+
+  ![image-20201013114659560](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnk8ehl4qj30t20c8dhg.jpg)
+
+  ![image-20201013114803908](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnk9ire2uj31cm05i3zs.jpg)
+
+- 项目打包完成后，需要传到【app.jar】供生成docker镜像，以下为两个阶段的依赖传递
+
+  ![image-20201013115128606](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnkd4cgq4j30oq07emxj.jpg)
+
+  【package】阶段最后上传app.jar
+
+  ![image-20201013115257567](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnkemalrtj31dg06kjso.jpg)
+
+  【docker-build】阶段下载app.jar用来构建镜像
+
+  ![image-20201013115357126](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnkfn99fvj31a602c0tf.jpg)
+
+### 5.3、自动构建
+
+设置每天自动构建的任务，目标为dev分支，构建完毕后自动部署至测试环境
+
+![image-20201013121131531](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnkxxq1p7j31yk0jq0wd.jpg)
+
+### 5.4、构建资源弹性
+
+采用Gitlab Runner进行构建，并行构建的时候自动化选择不同的Runner进行，以下两个构建阶段采用了不同的Runner进行
+
+![image-20201013120348690](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnkpwpu96j328m0e0aeo.jpg)
