@@ -34,7 +34,7 @@ uni:test:
       - .m2
 
 sonar:
-  image: registry.gitlab.baixing.cn/arch/base-images/maven-with-sonar:v0.1
+  image: registry.gitlab.com/baixingwang/sonar-scanner:latest
   stage: test
   only:
     - dev@baixingwang/devops-user-service
@@ -54,7 +54,6 @@ sonar:
   cache:
     paths:
       - .m2
-
 
 
 maven:package:
