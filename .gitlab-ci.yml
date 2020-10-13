@@ -26,6 +26,9 @@ uni:test:
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
+    - test@baixingwang/devops-user-service
+    - master@baixingwang/devops-user-service
+    - stg@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn clean test && cat target/site/jacoco/index.html
@@ -38,6 +41,9 @@ sonar:
   stage: test
   only:
     - dev@baixingwang/devops-user-service
+    - test@baixingwang/devops-user-service
+    - master@baixingwang/devops-user-service
+    - stg@baixingwang/devops-user-service
   script:
     - export SONAR_USER_HOME=$PWD/.sonar
     - mvn clean install sonar:sonar
@@ -93,6 +99,44 @@ deploy to dev:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
   script: kubectl set image deployment/dev-devops-user-service devops-user-service=$IMAGE_REF
+  only:
+    - dev@baixingwang/devops-user-service
   environment:
     name: dev
-    url: https://staging.example.com/
+    url: http://dev-devops.baixing.cn:8088
+
+deploy to test:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:1.14
+    entrypoint: [""]
+  script: kubectl set image deployment/test-devops-user-service devops-user-service=$IMAGE_REF
+  only:
+    - test@baixingwang/devops-user-service
+  environment:
+    name: test
+    url: http://test-devops.baixing.cn:8088
+
+deploy to stg:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:1.14
+    entrypoint: [""]
+  script: kubectl set image deployment/stg-devops-user-service devops-user-service=$IMAGE_REF
+  only:
+    - release@baixingwang/devops-user-service
+  environment:
+    name: stg
+    url: http://stg-devops.baixing.cn:8088
+
+deploy to prod:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:1.14
+    entrypoint: [""]
+  script: kubectl set image deployment/prod-devops-user-service devops-user-service=$IMAGE_REF
+  only:
+    - prod@baixingwang/devops-user-service
+  environment:
+    name: prod
+    url: http://prod-devops.baixing.cn:8088
