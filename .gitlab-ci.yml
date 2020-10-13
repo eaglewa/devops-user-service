@@ -3,12 +3,14 @@ variables:
   IMAGE_REF: $REGISTRY_BASE:$CI_PIPELINE_ID
 
 stages:
-  - build
+  - compile
   - test
+  - package
+  - build
   - deploy
 
 compile:
-  stage: build
+  stage: compile
   image: maven:3.6.3-adoptopenjdk-11
   only:
     - dev@baixingwang/devops-user-service
@@ -62,7 +64,7 @@ sonar:
   allow_failure: true
 
 maven package:
-  stage: build
+  stage: package
   dependencies:
     - compile
   image: maven:3.6.3-adoptopenjdk-11
