@@ -49,9 +49,9 @@ sonar:
 #      -Dsonar.coverage.exclusions=src/main/java/com/baixing/ms/trade/service/utils/mq/**/*,src/main/java/com/baixing/ms/trade/service/internal/impl/TradeRepoServiceImpl.java,src/main/java/com/baixing/ms/trade/service/v2/trade/impl/TradeRepositoryImpl.java,src/main/java/com/baixing/ms/trade/service/v2/ObjectUtilsV2.java,src/main/java/com/baixing/ms/trade/common/model/**/*,src/main/java/com/baixing/ms/trade/service/recovery/**/*
 #      -Dsonar.exclusions=src/main/java/com/baixing/ms/trade/service/coupon/impl/thrift/**/*,src/main/java/com/baixing/ms/trade/service/performance/impl/thrift/**/*
   artifacts:
-    expire_in: 1 week
     paths:
-      - trade-web/target/*.jar
+      - target/app.jar
+    expire_in: 12h
   cache:
     paths:
       - .m2
