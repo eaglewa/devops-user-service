@@ -117,7 +117,7 @@ smoke test:
     - dev@baixingwang/devops-user-service
     - dx-test@baixingwang/devops-user-service
   dependencies:
-    - deploy to dev
+    - deploy
   script:
     - testResult=$(curl -s www.baidu.com)
     - echo ${testResult} ;
@@ -140,7 +140,7 @@ integrate test:
   only:
     - test@baixingwang/devops-user-service
   dependencies:
-    - deploy to test
+    - deploy
   script:
     - testResult=$(curl -s www.baidu.com)
     - echo ${testResult} ;
@@ -151,7 +151,7 @@ stress test:
   only:
     - test@baixingwang/devops-user-service
   dependencies:
-    - deploy to test
+    - deploy
   script:
     - testResult=$(curl -s www.baidu.com) #改为压测地址
     - echo ${testResult} ;
@@ -175,7 +175,7 @@ online test:
   only:
     - release@baixingwang/devops-user-service
   dependencies:
-    - deploy to stg
+    - deploy
 
   script:
     - testResult=$(curl -s www.baidu.com)
