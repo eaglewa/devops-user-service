@@ -2,7 +2,6 @@ variables:
   REGISTRY_BASE: registry.gitlab.com/baixingwang/devops-user-service
   IMAGE_REF: $REGISTRY_BASE:$CI_PIPELINE_ID
 
-
 stages:
   - maven-build
   - maven-uni-test
@@ -12,7 +11,7 @@ maven-build:
   stage: maven-build
   image: maven:3.6.3-adoptopenjdk-11
   only:
-    - master@baixingwang/devops-user-service
+    - dev@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U compile
@@ -24,7 +23,7 @@ maven-uni-test:
   stage: maven-uni-test
   image: maven:3.6.3-adoptopenjdk-11
   only:
-    - master@baixingwang/devops-user-service
+    - dev@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn clean test && cat target/site/jacoco/index.html
@@ -41,4 +40,4 @@ docker-build:
     - docker push $IMAGE_REF
     - docker rmi $IMAGE_REF
   only:
-    - master@baixingwang/devops-user-service
+    - dev@baixingwang/devops-user-service

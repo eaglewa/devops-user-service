@@ -42,3 +42,26 @@
 我们在TAPD上将需求和Gitlab代码库进行关联，在小组成员提交代码时需要明确关联的需求。
 
 ![image-20201013101037123](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnhg56ho4j31v20i6tc4.jpg)
+
+
+## 3、代码管理
+
+### 3.1、代码管理工具
+
+代码管理库采用Gitlab进行版本管理，项目代码地址为：https://gitlab.com/baixingwang/devops-user-service
+
+### 3.2、分支管理
+
+本次演示项目分支策略比较简单，采用【dev】-【master】两分支策略，简单说明如下：
+
+- dev分支
+  - 开发分支
+  - 编译、测试、单测覆盖度、代码质量、测试环境部署等均在该分支上进行
+- master分支
+  - 部署分支
+  - 完成测试流程后，合并到该分支进行上线部署
+
+![image-20201013103129578](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjni1uh8j8j31j40mydix.jpg)
+
+### 3.3、代码审查
+
