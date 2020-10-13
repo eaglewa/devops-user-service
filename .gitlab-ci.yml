@@ -49,7 +49,7 @@ maven:package:
       - .m2
 
 image:package:
-  stage: package
+  stage: deploy:dev
   needs:
     - maven:package
   image: docker
