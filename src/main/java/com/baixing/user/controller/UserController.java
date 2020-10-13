@@ -41,8 +41,7 @@ public class UserController {
     
     @GetMapping("list")
     public List<User> list() {
-        List<User> list = service.list();
-        return list;
+        return service.list();
     }
     
     @GetMapping("{id}")
