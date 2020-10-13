@@ -21,7 +21,7 @@ compile:
     paths:
       - .m2
 
-uni:test:
+uni test:
   stage: test
   image: maven:3.6.3-adoptopenjdk-11
   only:
@@ -57,7 +57,7 @@ sonar:
 
 
 
-maven:package:
+maven package:
   stage: package
   image: maven:3.6.3-adoptopenjdk-11
   only:
@@ -73,7 +73,7 @@ maven:package:
     paths:
       - .m2
 
-build:
+docker build:
   stage: build
   image: docker
   script:
