@@ -88,7 +88,7 @@ docker build:
   script:
     - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)')
     - echo $VERSION
-    - DEV_IMAGE=$REGISTRY_BASE:$VERSION-$CI_PIPELINE_ID
+    - export DEV_IMAGE=$REGISTRY_BASE:$VERSION-$CI_PIPELINE_ID
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t $DEV_IMAGE .
     - docker push $DEV_IMAGE
