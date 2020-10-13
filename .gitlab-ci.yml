@@ -7,6 +7,7 @@ stages:
   - maven-uni-test
   - maven-package
   - docker-build
+  - deploy
 
 maven-build:
   stage: maven-build
@@ -60,3 +61,10 @@ docker-build:
     - dev@baixingwang/devops-user-service
   tags:
     - baixingwang
+
+deploy to dev:
+  stage: deploy
+  script: make deploy
+  environment:
+    name: dev
+    url: https://staging.example.com/
