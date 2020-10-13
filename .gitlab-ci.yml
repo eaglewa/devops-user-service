@@ -64,7 +64,7 @@ docker-build:
 
 deploy to dev:
   stage: deploy
-  script: make deploy
+  script: kubectl get ns
   environment:
     name: dev
     url: https://staging.example.com/
