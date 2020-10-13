@@ -17,11 +17,13 @@ compile:
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U compile
+    - VERSION=$(mvn --non-recursive help:evaluate -Dexpression=project.version | grep -v '\[.*')
+    - echo $VERSION
   cache:
     paths:
       - .m2
 
-uni:test:
+uni test:
   stage: test
   image: maven:3.6.3-adoptopenjdk-11
   only:
@@ -61,7 +63,7 @@ sonar:
     paths:
       - .m2
 
-maven:package:
+maven package:
   stage: package
   image: maven:3.6.3-adoptopenjdk-11
   only:
