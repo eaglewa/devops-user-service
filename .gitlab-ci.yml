@@ -4,6 +4,7 @@ variables:
 stages:
   - compile
   - test
+  - smoke-test
   - package
   - build
   - deploy
@@ -145,3 +146,12 @@ deploy to prod:
   environment:
     name: prod
     url: http://prod-devops.baixing.cn:8088/
+
+smoke-test:
+  stage: smoke-test
+  dependencies:
+    - deploy
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+    - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
