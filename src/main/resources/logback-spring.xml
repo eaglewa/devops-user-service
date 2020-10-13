@@ -4,7 +4,6 @@
 
     <springProperty name="springAppName" scope="context" source="spring.application.name"/>
     <springProperty name="logFile" scope="context" source="logging.file" defaultValue="log/${springAppName}"/>
-    <springProperty name="appId" scope="context" source="app.appId"/>
     <springProperty name="env" scope="context" source="spring.profiles"/>
 
 
