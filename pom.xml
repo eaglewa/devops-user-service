@@ -21,6 +21,17 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>baixing-snapshot</id>
+            <url>http://nexus.baixing.cn/repository/maven-snapshots/</url>
+        </repository>
+        <repository>
+            <id>baixing-release</id>
+            <url>http://nexus.baixing.cn/repository/maven-releases/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
