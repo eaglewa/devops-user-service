@@ -105,9 +105,9 @@ smoke test:
   dependencies:
     - deploy to dev
   script:
-    - testResult=$(curl -s www.baidu.com)
+    - testResult=$(curl -s "${api_host}id=${api_devcase_id}&token=${api_token}&mode=json")
     - echo ${testResult} ;
-    #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+    - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
 
 deploy to test:
   stage: deploy
@@ -132,9 +132,9 @@ integrate test:
   dependencies:
     - deploy to test
   script:
-    - testResult=$(curl -s www.baidu.com)
+    - testResult=$(curl -s "${api_host}id=${api_testcase_id}&token=${api_token}&mode=json")
     - echo ${testResult} ;
-    #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+    - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
 
 stress test:
   stage: stressTest
@@ -143,9 +143,13 @@ stress test:
   dependencies:
     - deploy to test
   script:
-    - testResult=$(curl -s www.baidu.com) #改为压测地址
+    - 'stressTrigger=$(curl -s -X POST --header "Content-Type: application/json" --header "token: $pt_token" --header "Accept: */*" -d "[$pt_case_id]"   "$pt_host/runOnce" )'
+    - echo ${stressTrigger}
+    - if [[ ${stressTrigger} =~ "压测开始" ]]; then  echo "性能测试触发成功" ; else exit 1;  fi
+    - sleep 10
+    - 'testResult=$(curl -s -X POST --header "Content-Type: application/json" --header "token: $pt_token" --header "Accept: */*" -d "[$pt_case_id]"   "$pt_host/$pt_case_id?_=1602594288128")'
     - echo ${testResult} ;
-  #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+    - if [[ ${testResult} =~ "\"SuccessPercent\":\"1.00\"" ]]; then  echo "性能测试通过" ; else echo "性能测试未通过";  exit 1;  fi
 
 
 deploy to stg:
@@ -171,9 +175,9 @@ online test:
   dependencies:
     - deploy to stg
   script:
-    - testResult=$(curl -s www.baidu.com)
+    - testResult=$(curl -s "${api_host}id=${api_stagcase_id}&token=${api_token}&mode=json")
     - echo ${testResult} ;
-  #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+    - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
 
 deploy to prod:
   stage: deploy
