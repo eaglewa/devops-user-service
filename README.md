@@ -195,3 +195,69 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 ![image-20201013141241485](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnog0emwrj31os0u0n85.jpg)
 
 ![image-20201013141301548](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnogcqnsqj31ei0bognl.jpg)
+
+## 7、自动化测试
+
+### 7.1、测试计划
+
+### 7.2、单元测试和覆盖度
+
+### 7.3、接口测试
+
+### 7.4、性能测试
+
+### 7.5、测试报告
+
+## 8、代码质量管控
+
+### 8.1、质控工具
+
+本次项目代码质量管控采用sonar，访问地址为：http://39.100.144.36
+
+![image-20201014102547753](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjonibbvhuj311e0eqq4i.jpg)
+
+同时引入阿里代码规范作为代码检测规则：
+
+![image-20201014102659354](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjonjjuj41j314t0jvte8.jpg)
+
+### 8.2、自动化检测
+
+引入sonar自动化检测插件，在流水线中单独创建一个任务进行自动化代码质量管控，为了加快速度，和单元测试并行处理
+
+![image-20201014102948937](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjonmhxnqzj30j1060q38.jpg)
+
+![image-20201014103023212](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjonn32e2dj30os0ccjtn.jpg)
+
+### 8.3、可视化
+
+登录sonar即可查看代码质量报告
+
+![image-20201014103236638](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjonpe935qj310s0lzac5.jpg)
+
+## 9、部署流水线
+
+### 9.1、自动化
+
+### 9.2、多环境
+
+### 9.3、应用和配置分离
+
+### 9.4、可视化
+
+### 9.5、灰度发布
+
+## 10、环境管理
+
+### 10.1、环境确定
+
+### 10.2、环境交付
+
+## 11、度量可视化
+
+本次项目最终线上监控采用【Metrics】+ 【Log】+ 【Tracing】
+
+### 11.1、日志
+
+### 11.2、Metrics
+
+### 11.3、Tracing
