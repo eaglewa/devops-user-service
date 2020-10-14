@@ -187,7 +187,6 @@ deploy to prod:
     - kubectl set image deployment/prod-devops-user-service devops-user-service=$IMAGE_REF
   only:
     - tags
-    - master
   environment:
     name: prod
     url: http://prod-devops.baixing.cn:8088/
