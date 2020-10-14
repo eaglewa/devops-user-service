@@ -210,7 +210,14 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 ![image-testplan](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp0s70dzlj31a10es41u.jpg)
 
 ### 7.2、单元测试和覆盖度
-单元测试
+
+针对service层做单元测试，并通过Jacoco生成单元测试覆盖度报告
+
+![image-20201014182820445](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp1gbf9xrj30xk04qjs5.jpg)
+
+同时在【ReadME】文件中生成覆盖度标签
+
+![image-20201014183146276](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp1jw1oqdj30ct037jri.jpg)
 
 ### 7.3、接口测试
 使用YPAI平台进行接口协议管理及自动化用例执行，其他依赖前置后置操作能力，由自研服务支持。
