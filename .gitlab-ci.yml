@@ -180,8 +180,13 @@ deploy to prod:
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
-  script: kubectl set image deployment/prod-devops-user-service devops-user-service=$IMAGE_REF
+  script: 
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
+    - echo $VERSION
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID 
+    - kubectl set image deployment/prod-devops-user-service devops-user-service=$IMAGE_REF
   only:
+    - tags
     - master
   environment:
     name: prod
