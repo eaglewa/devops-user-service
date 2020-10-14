@@ -72,7 +72,7 @@ docker build:
   stage: build
   image: docker
   script:
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)')
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oE '\d.*\d.*\d')
     - echo $VERSION
     - IMAGE=$REGISTRY_BASE:$VERSION-$CI_PIPELINE_ID
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
@@ -88,7 +88,7 @@ deploy to dev:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
   script:
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)')
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
     - echo $VERSION
     - IMAGE=$REGISTRY_BASE:dev-$VERSION-$CI_PIPELINE_ID
     - kubectl set image deployment/dev-devops-user-service devops-user-service=$IMAGE
@@ -115,7 +115,7 @@ deploy to test:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
   script: 
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)')
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
     - echo $VERSION
     - IMAGE=$REGISTRY_BASE:test-$VERSION-$CI_PIPELINE_ID
     - kubectl set image deployment/test-devops-user-service devops-user-service=$IMAGE
@@ -154,7 +154,7 @@ deploy to stg:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
   script:
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)')
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
     - echo $VERSION
     - IMAGE=$REGISTRY_BASE:test-$VERSION-$CI_PIPELINE_ID 
     - kubectl set image deployment/stg-devops-user-service devops-user-service=$IMAGE
