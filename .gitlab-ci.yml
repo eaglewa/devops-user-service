@@ -1,30 +1,30 @@
 variables:
   REGISTRY_BASE: registry.gitlab.com/baixingwang/devops-user-service
-  IMAGE_REF: $REGISTRY_BASE:$CI_PIPELINE_ID
-
 
 stages:
-  - maven-build
-  - maven-uni-test
-  - docker-build
+  - compile
+  - test
+  - package
+  - build
+  - deploy
+  - intergrateTest
+  - stressTest
 
-maven-build:
-  stage: maven-build
+compile:
+  stage: compile
   image: maven:3.6.3-adoptopenjdk-11
-  only:
-    - master@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U compile
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)')
+    - echo $VERSION
   cache:
     paths:
       - .m2
 
-maven-uni-test:
-  stage: maven-uni-test
+uni-test:
+  stage: test
   image: maven:3.6.3-adoptopenjdk-11
-  only:
-    - master@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn clean test && cat target/site/jacoco/index.html
@@ -32,16 +32,158 @@ maven-uni-test:
     paths:
       - .m2
 
-docker-build:
-  stage: docker-build
+sonar:
+  image: maven:3.6.3-adoptopenjdk-11
+  stage: test
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+  cache:
+    paths:
+      - .sonar/cache
+  script:
+    - mvn verify sonar:sonar
+      -Dsonar.qualitygate.wait=true
+      -Dmaven.test.skip=true
+      -Dsonar.host.url=http://39.100.144.36
+      -Dsonar.projectKey=devops-user-service
+      -Dsonar.dynamicAnalysis=reuseReports
+      -Dsonar.jacoco.reportMissing.force.zero=true
+      -Dsonar.jacoco.reportPaths=$PWD/devops-user-service/coverage-reports/jacoco.exec
+  allow_failure: true
+
+maven package:
+  stage: package
+  dependencies:
+    - compile
+  image: maven:3.6.3-adoptopenjdk-11
+  script:
+    - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
+    - mvn -U package -Dmaven.test.skip=true
+  artifacts:
+    paths:
+      - target/app.jar
+    expire_in: 12h
+  cache:
+    paths:
+      - .m2
+
+docker build:
+  stage: build
   image: docker
   script:
-    - docker images
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oE '\d.*\d.*\d')
+    - echo $VERSION
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker build -t $IMAGE_REF .
-    - docker push $IMAGE_REF
-    - docker rmi $IMAGE_REF
-  only:
-    - master@baixingwang/devops-user-service
+    - docker build -t $IMAGE .
+    - docker push $IMAGE
+    - docker rmi $IMAGE
   tags:
     - baixingwang
+
+deploy to dev:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:1.14
+    entrypoint: [""]
+  script:
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
+    - echo $VERSION
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
+    - kubectl set image deployment/dev-devops-user-service devops-user-service=$IMAGE
+  only:
+    - /^feature-.*/
+  environment:
+    name: dev
+    url: http://dev-devops.baixing.cn:8088
+
+smoke test:
+  stage: intergrateTest
+  only:
+    - /^feature-.*/
+  dependencies:
+    - deploy to dev
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+    #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
+deploy to test:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:1.14
+    entrypoint: [""]
+  script: 
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
+    - echo $VERSION
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
+    - kubectl set image deployment/test-devops-user-service devops-user-service=$IMAGE
+  only:
+    - dev
+  environment:
+    name: test
+    url: http://test-devops.baixing.cn:8088
+
+integrate test:
+  stage: intergrateTest
+  only:
+    - dev
+  dependencies:
+    - deploy to test
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+    #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
+stress test:
+  stage: stressTest
+  only:
+    - dev
+  dependencies:
+    - deploy to test
+  script:
+    - testResult=$(curl -s www.baidu.com) #改为压测地址
+    - echo ${testResult} ;
+  #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
+
+deploy to stg:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:1.14
+    entrypoint: [""]
+  script:
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
+    - echo $VERSION
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID 
+    - kubectl set image deployment/stg-devops-user-service devops-user-service=$IMAGE
+  only:
+    - master
+  environment:
+    name: stg
+    url: http://stg-devops.baixing.cn:8088
+
+online test:
+  stage: intergrateTest
+  only:
+    - master
+  dependencies:
+    - deploy to stg
+  script:
+    - testResult=$(curl -s www.baidu.com)
+    - echo ${testResult} ;
+  #- if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
+
+deploy to prod:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:1.14
+    entrypoint: [""]
+  script: kubectl set image deployment/prod-devops-user-service devops-user-service=$IMAGE_REF
+  only:
+    - master
+  environment:
+    name: prod
+    url: http://prod-devops.baixing.cn:8088/
+
