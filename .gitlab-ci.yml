@@ -74,7 +74,7 @@ docker build:
   script:
     - VERSION=$(grep -m1 '<version>' pom.xml | grep -oE '\d.*\d.*\d')
     - echo $VERSION
-    - IMAGE=$REGISTRY_BASE:$VERSION-$CI_PIPELINE_ID
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t $IMAGE .
     - docker push $IMAGE
@@ -90,7 +90,7 @@ deploy to dev:
   script:
     - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
     - echo $VERSION
-    - IMAGE=$REGISTRY_BASE:dev-$VERSION-$CI_PIPELINE_ID
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
     - kubectl set image deployment/dev-devops-user-service devops-user-service=$IMAGE
   only:
     - /^feature-.*/
@@ -117,7 +117,7 @@ deploy to test:
   script: 
     - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
     - echo $VERSION
-    - IMAGE=$REGISTRY_BASE:test-$VERSION-$CI_PIPELINE_ID
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
     - kubectl set image deployment/test-devops-user-service devops-user-service=$IMAGE
   only:
     - dev
@@ -156,7 +156,7 @@ deploy to stg:
   script:
     - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
     - echo $VERSION
-    - IMAGE=$REGISTRY_BASE:test-$VERSION-$CI_PIPELINE_ID 
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID 
     - kubectl set image deployment/stg-devops-user-service devops-user-service=$IMAGE
   only:
     - master
