@@ -21,10 +21,38 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>baixing-snapshot</id>-->
+<!--            <url>http://nexus.baixing.cn/repository/maven-snapshots/</url>-->
+<!--        </repository>-->
+<!--        <repository>-->
+<!--            <id>baixing-release</id>-->
+<!--            <url>http://nexus.baixing.cn/repository/maven-releases/</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Hoxton.SR8</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -43,6 +71,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>6.4</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -146,13 +179,18 @@
                         </configuration>
                     </execution>
                     <!--这个check:对代码进行检测，控制项目构建成功还是失败-->
-                    <execution>
-                        <id>check</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>check</id>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.7.0.1746</version>
             </plugin>
         </plugins>
     </build>

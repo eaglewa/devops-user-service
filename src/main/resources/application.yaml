@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: local
   datasource:
     url: jdbc:h2:~/test
     platform: h2
@@ -17,3 +19,10 @@ spring:
     console:
       enabled: true
       path: /console
+  application:
+    name: devops-user-service
+
+
+---
+spring:
+  profiles: local
