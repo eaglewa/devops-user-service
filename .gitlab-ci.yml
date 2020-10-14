@@ -64,8 +64,6 @@ sonar:
       -Dsonar.jacoco.reportMissing.force.zero=true
       -Dsonar.jacoco.reportPaths=$PWD/devops-user-service/coverage-reports/jacoco.exec
   allow_failure: true
-  dependencies:
-    - uni-test
 
 maven package:
   stage: package
