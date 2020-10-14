@@ -13,9 +13,6 @@ stages:
 compile:
   stage: compile
   image: maven:3.6.3-adoptopenjdk-11
-  only:
-    - dev@baixingwang/devops-user-service
-    - dx-test@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U compile
@@ -28,11 +25,6 @@ compile:
 uni-test:
   stage: test
   image: maven:3.6.3-adoptopenjdk-11
-  only:
-    - dev@baixingwang/devops-user-service
-    - test@baixingwang/devops-user-service
-    - master@baixingwang/devops-user-service
-    - stg@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn clean test && cat target/site/jacoco/index.html
@@ -43,11 +35,6 @@ uni-test:
 sonar:
   image: maven:3.6.3-adoptopenjdk-11
   stage: test
-  only:
-    - dev@baixingwang/devops-user-service
-    - test@baixingwang/devops-user-service
-    - master@baixingwang/devops-user-service
-    - stg@baixingwang/devops-user-service
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
     GIT_DEPTH: "0"
@@ -70,8 +57,6 @@ maven package:
   dependencies:
     - compile
   image: maven:3.6.3-adoptopenjdk-11
-  only:
-    - dev@baixingwang/devops-user-service
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U package -Dmaven.test.skip=true
@@ -85,19 +70,15 @@ maven package:
 
 docker build:
   stage: build
-  dependencies:
-    - maven package
   image: docker
   script:
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)')
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oE '\d.*\d.*\d')
     - echo $VERSION
-    - export DEV_IMAGE=$REGISTRY_BASE:$VERSION-$CI_PIPELINE_ID
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker build -t $DEV_IMAGE .
-    - docker push $DEV_IMAGE
-    - docker rmi $DEV_IMAGE
-  only:
-    - dev@baixingwang/devops-user-service
+    - docker build -t $IMAGE .
+    - docker push $IMAGE
+    - docker rmi $IMAGE
   tags:
     - baixingwang
 
@@ -106,9 +87,13 @@ deploy to dev:
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
-  script: kubectl set image deployment/dev-devops-user-service devops-user-service=$DEV_IMAGE
+  script:
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
+    - echo $VERSION
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
+    - kubectl set image deployment/dev-devops-user-service devops-user-service=$IMAGE
   only:
-    - dev@baixingwang/devops-user-service
+    - /^feature-.*/
   environment:
     name: dev
     url: http://dev-devops.baixing.cn:8088
@@ -116,8 +101,7 @@ deploy to dev:
 smoke test:
   stage: intergrateTest
   only:
-    - dev@baixingwang/devops-user-service
-    - dx-test@baixingwang/devops-user-service
+    - /^feature-.*/
   dependencies:
     - deploy to dev
   script:
@@ -130,9 +114,13 @@ deploy to test:
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
-  script: kubectl set image deployment/test-devops-user-service devops-user-service=$DEV_IMAGE
+  script: 
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
+    - echo $VERSION
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
+    - kubectl set image deployment/test-devops-user-service devops-user-service=$IMAGE
   only:
-    - test@baixingwang/devops-user-service
+    - dev
   environment:
     name: test
     url: http://test-devops.baixing.cn:8088
@@ -140,7 +128,7 @@ deploy to test:
 integrate test:
   stage: intergrateTest
   only:
-    - test@baixingwang/devops-user-service
+    - dev
   dependencies:
     - deploy to test
   script:
@@ -151,7 +139,7 @@ integrate test:
 stress test:
   stage: stressTest
   only:
-    - test@baixingwang/devops-user-service
+    - dev
   dependencies:
     - deploy to test
   script:
@@ -165,9 +153,13 @@ deploy to stg:
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
-  script: kubectl set image deployment/stg-devops-user-service devops-user-service=$DEV_IMAGE
+  script:
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
+    - echo $VERSION
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID 
+    - kubectl set image deployment/stg-devops-user-service devops-user-service=$IMAGE
   only:
-    - release@baixingwang/devops-user-service
+    - master
   environment:
     name: stg
     url: http://stg-devops.baixing.cn:8088
@@ -175,10 +167,9 @@ deploy to stg:
 online test:
   stage: intergrateTest
   only:
-    - release@baixingwang/devops-user-service
+    - master
   dependencies:
     - deploy to stg
-
   script:
     - testResult=$(curl -s www.baidu.com)
     - echo ${testResult} ;
@@ -191,7 +182,7 @@ deploy to prod:
     entrypoint: [""]
   script: kubectl set image deployment/prod-devops-user-service devops-user-service=$IMAGE_REF
   only:
-    - prod@baixingwang/devops-user-service
+    - master
   environment:
     name: prod
     url: http://prod-devops.baixing.cn:8088/
