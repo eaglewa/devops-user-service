@@ -202,17 +202,26 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ![image-20201013141301548](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnogcqnsqj31ei0bognl.jpg)
 
-## 7、自动化测试
 
 ### 7.1、测试计划
+测试计划使用TAPD平台进行管理，关联需求、用例及缺陷。
+![image-testplan](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp0s70dzlj31a10es41u.jpg)
 
 ### 7.2、单元测试和覆盖度
 
 ### 7.3、接口测试
+使用YPAI平台进行接口协议管理及自动化用例执行，其他依赖前置后置操作能力，由自研服务支持。
+![image-interface](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp0yvicmqj31870liq5t.jpg)
 
 ### 7.4、性能测试
+基于jmeter自研性能测试平台，进行性能测试。
+![image-stress](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp10x7y54j30t708gjsl.jpg)
 
 ### 7.5、测试报告
+使用TAPD做测试报告数据收集及发送。
+![image-report](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp123hqzkj31c80f7jul.jpg)
+
+
 
 ## 8、代码质量管控
 
