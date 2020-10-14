@@ -1,6 +1,6 @@
 # DevOps比赛项目说明
 
-[![pipeline status](https://gitlab.com/baixingwang/devops-user-service/badges/master/pipeline.svg)](https://gitlab.com/baixingwang/devops-user-service/-/commits/master) [![coverage report](https://gitlab.com/baixingwang/devops-user-service/badges/master/coverage.svg)](https://gitlab.com/baixingwang/devops-user-service/-/commits/master)
+[TOC]
 
 ## 1、总体说明
 
@@ -108,7 +108,10 @@
 ### 4.3、依赖组件管理
 
  代码中配置仓库地址，确保对应的依赖从制品库中进行下载，参考【pom.xml】
+
 ![image-20201013104735168](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjniilliu3j31kr0u0tdq.jpg)
+
+
 
 ## 5、构建方式
 
@@ -154,6 +157,10 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ![image-20201013120348690](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnkpwpu96j328m0e0aeo.jpg)
 
+![image-20201013120503644](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnkr7lxzcj327o0fawjx.jpg)
+
+
+
 ## 6、持续集成
 
 ### 6.1、按需集成
@@ -186,7 +193,7 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 6.4、自动化测试
 
-每次代码变更触发持续集成时，都会进行自动化单元测试，在流水线配置时单独配置一个单测阶段 
+每次代码变更触发持续集成时，都会进行自动化单元测试，在流水线配置时单独配置一个单测阶段
 
 ![image-20201013141148656](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnof3i9t4j31bs0kewhi.jpg)
 
@@ -240,9 +247,24 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 9.2、多环境
 
+本次项目受限于机器数量，多环境通过k8s的namespace进行模拟
+
+|       环境        |                说明                |          访问地址           |
+| :---------------: | :--------------------------------: | :-------------------------: |
+|  开发环境（dev）  |             功能自测试             | dev-devops.baixing.cn:8088  |
+| 测试环境（test）  | 包括功能测试、集成测试和压力测试等 | test-devops.baixing.cn:8088 |
+| 预发布环境（stg） |  上线前的回归，和真实环境基本一致  | stg-devops.baixing.cn:8088  |
+| 产线环境（prod）  |            最终产线环境            | prod-devops.baixing.cn:8088 |
+
+![企业微信截图_63aac2d6-c729-4df3-bf44-1806b776264d](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjorjygr1aj30k803yq3b.jpg)
+
 ### 9.3、应用和配置分离
 
+
+
 ### 9.4、可视化
+
+
 
 ### 9.5、灰度发布
 
