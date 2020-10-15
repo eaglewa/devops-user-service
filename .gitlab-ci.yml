@@ -144,7 +144,7 @@ stress test:
     - echo ${stressTrigger}
     - if [[ ${stressTrigger} =~ "压测开始" ]]; then  echo "性能测试触发成功" ; else exit 1;  fi
     - sleep 10
-    - 'testResult=$(curl -s -X POST --header "Content-Type: application/json" --header "token: $pt_token" --header "Accept: */*" -d "[$pt_case_id]"   "$pt_host/$pt_case_id?_=1602594288128")'
+    - 'testResult=$(curl -s -X POST --header "Content-Type: application/json" --header "token: $pt_token" --header "Accept: */*" -d "[$pt_case_id]"   "$pt_host/statInfo/$pt_case_id?_=1602594288128")'
     - echo ${testResult} ;
     - if [[ ${testResult} =~ "\"SuccessPercent\":\"1.00\"" ]]; then  echo "性能测试通过" ; else echo "性能测试未通过";  exit 1;  fi
 
