@@ -32,6 +32,10 @@ uni-test:
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn clean test && cat target/site/jacoco/index.html
+  only:
+    - /^feature-.*/
+    - master
+    - release
   cache:
     paths:
       - .m2
