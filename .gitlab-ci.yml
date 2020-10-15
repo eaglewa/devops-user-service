@@ -197,7 +197,7 @@ deploy to prod:
     - git commit -am 'image update'
     - git push origin master
   only:
-    - master
+    - tags
   environment:
     name: prod
     url: http://prod-devops.baixing.cn:8088/
