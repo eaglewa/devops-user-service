@@ -165,8 +165,13 @@
                             </destFile>
                             <includes>
                                 <include>**/service/**</include>
-                                <include>**/controller/**</include>
                             </includes>
+                            <excludes>
+                                <exclude>**/config/**</exclude>
+                                <exclude>**/controller/**</exclude>
+                                <exclude>**/dao/**</exclude>
+                                <exclude>**/entity/**</exclude>
+                            </excludes>
                             <!-- rules里面指定覆盖规则 -->
                             <!--                    <rules>-->
                             <!--                        <rule implementation="org.jacoco.maven.RuleConfiguration">-->
