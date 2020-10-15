@@ -101,6 +101,7 @@
                     <include>**/*.yaml</include>
                     <include>**/*.xml</include>
                     <include>**/*.ftl</include>
+                    <include>**/*.sql</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>
