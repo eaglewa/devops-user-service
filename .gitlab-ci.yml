@@ -190,7 +190,7 @@ tag branch:
     - git remote set-url origin https://baixingwang:$CI_PASSWORD@gitlab.com/baixingwang/devops-user-service.git
     - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
     - git tag -a "$VERSION" -m "Auto-Release"
-    - git push origin master
+    - git push origin "$VERSION"
 
 tag image:
   stage: tags
