@@ -8,9 +8,67 @@
 
 ### 1.1、项目说明
 
+本项目是百姓网DevOps团队基于现有工作提炼出来的相对表完整的流水线，项目功能是一个简单的用户信息的增删改查，采用SpringBoot框架开发，数据库采用H2。
+
+对应的API为：
+
+| API列表  |           路径           | 请求方式 |              参数说明              |
+| :------: | :----------------------: | :------: | :--------------------------------: |
+| 项目首页 |            /             |   GET    |                 无                 |
+| 查询用户 |      api/user/list       |   GET    |                 无                 |
+| 新增用户 |     api/user/create      |   POST   | {   "name": "messi",   "age": 30 } |
+| 更新用户 |     api/user/update      |   POST   |     {   "id": 1,   "age": 40 }     |
+| 删除用户 | api/user/remove?id=${id} |   POST   |          ${id}代表用户id           |
+
+产线环境为：http://prod-devops.baixing.cn:8088/
+
+![image-20201015100933256](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpsnnz50fj30w507j0t8.jpg)
+
 ### 1.2、团队介绍
 
+百姓网DevOps团队成员介绍：
+
+- 王翱
+- 李如磊
+- 高榕
+- 王东兴
+- 虞伟
+
 ### 1.3、流水线说明
+
+
+
+### 1.4、工具链
+
+介绍下本次演示所使用到的工具链和对应的访问地址
+
+- 基础环境：
+  - EKS
+  - ElasticStack：https://8a639b1c32ea43df8f6d9157eb6e2ef8.ap-southeast-1.aws.found.io:9243/app/apm#/services?rangeFrom=now-15m&rangeTo=now
+
+- 代码
+  - 技术框架：SpringBoot
+  - 数据库：H2
+- 持续集成
+  - 代码版本库：Gitlab：https://gitlab.com/baixingwang/devops-user-service
+  - 编译工具：Maven
+  - 代码质控：Sonar
+  - 单侧覆盖度：Jacoco
+  - 制品管理：Nexus
+  - 项目管理：TAPD
+  - 接口测试：Yapi
+  - 性能测试：Jmeter
+- 持续部署
+  - 容器技术：Docker
+  - 容器声明管理：Kustomize
+  - 部署工具：ArgoCD
+  - 灰度发布：Flagger
+  - 可视化度量：Prometheus+Grafana
+  - 全链路：Elastic APM
+
+### 1.5、演示说明
+
+以下会从**十个维度**对整个流水线运行过程进行详细说明并附上关键截图，供各位参考
 
 
 ## 2、需求管理
@@ -296,6 +354,24 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 11.1、日志
 
+
+
 ### 11.2、Metrics
 
+埋点数据指标通过Prometheus+Grafana进行展示，可以进行自定义
+
+![image-20201015095040818](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps413kvej31em0gttbr.jpg)
+
+同时数据会进入ElasticStack中，通过Kibina进行展示
+
+![image-20201015095209548](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps5k2nm0j31ge0okq77.jpg)
+
+![image-20201015095227567](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps5vaqumj31gy0rf77q.jpg)
+
 ### 11.3、Tracing
+
+链路追踪依赖APM组件，在Kibana中进行展示
+
+![image-20201015095340138](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps74s019j318v09kabb.jpg)
+
+![image-20201015095304146](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps6ic17tj313d0lpjtd.jpg)
