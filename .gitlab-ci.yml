@@ -9,7 +9,6 @@ stages:
   - build
   - deploy
   - test
-  - tags
   - release
   - clean
 
@@ -182,32 +181,6 @@ online test:
     - testResult=$(curl -s "${api_host}id=${api_stagcase_id}&token=${api_token}&mode=json")
     - echo ${testResult} ;
     - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
-
-tag branch:
-  stage: clean
-  only: 
-    - master
-  script:
-    - git config --global user.name "baixingwang"
-    - git config --global user.email "baixingwang@baixing.com"
-    - git remote set-url origin https://baixingwang:$CI_PASSWORD@gitlab.com/baixingwang/devops-user-service.git
-    - git tag -a "Release_$(date +%Y%m%d%H%M)" -m "Auto-Release"
-    - git push origin "Release_$(date +%Y%m%d%H%M)"
-
-tag image:
-  stage: tags
-  image: docker
-  script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker pull $IMAGE_REF
-    - RELEASE_IMAGE=REGISTRY_BASE:Release_$(date +%Y%m%d%H%M)
-    - docker tag $IMAGE_REF $RELEASE_IMAGE
-    - docker push $RELEASE_IMAGE
-    - docker rmi $IMAGE_REF $RELEASE_IMAGE
-  only:
-    - master
-  tags:
-    - baixingwang
   
 deploy to prod:
   stage: release
@@ -223,10 +196,7 @@ deploy to prod:
     - cd /opt/devops-cd
     - git pull
     - cd /opt/devops-cd/devops-user-service
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oE '\d.*\d.*\d')
-    - echo $VERSION
-    - IMAGE=$REGISTRY_BASE:v$VERSION
-    - kustomize edit set image $IMAGE
+    - kustomize edit set image $IMAGE_REF
     - git commit -am 'image update'
     - git push origin master
   only:
@@ -244,3 +214,14 @@ clean:
     - echo "清理环境..."
   only:
     - master
+  
+tag branch:
+  stage: clean
+  only: 
+    - master
+  script:
+    - git config --global user.name "baixingwang"
+    - git config --global user.email "baixingwang@baixing.com"
+    - git remote set-url origin https://baixingwang:$CI_PASSWORD@gitlab.com/baixingwang/devops-user-service.git
+    - git tag -a "Release_$(date +%Y%m%d%H%M)" -m "Auto-Release"
+    - git push origin "Release_$(date +%Y%m%d%H%M)"
