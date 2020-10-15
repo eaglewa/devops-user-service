@@ -319,11 +319,30 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 9.1、自动化
 
+代码提交变更后自动触发流水线，流水线的整个生命周期中只有上线合并代码的确认环节需要人为干预，其他均为自动化处理
+
+![image-20201014135600476](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjotl1dxadj30cz06b3z0.jpg)
+
 ### 9.2、多环境
+
+本次演示包括四个环境：
+
+- 开发环境
+- 测试环境
+- 预发布环境
+- 产线环境
+
+具体说明见【第10部分】
 
 ### 9.3、应用和配置分离
 
+项目部署在k8s中，配置可以通过ConfigMap来进行读取，做到应用和配置分离的效果
+
 ### 9.4、可视化
+
+在Gitlab中可以展示流水线先的DAG图
+
+![image-20201015110631963](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpuay6hi5j318r0jcwgk.jpg)
 
 ### 9.5、灰度发布
 
