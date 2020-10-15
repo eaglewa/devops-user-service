@@ -366,6 +366,12 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 9.5、灰度发布
 
+利用flagger组件进行灰度发布，灰度发布示意图和执行日志如下
+
+![img](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjq7yvytbnj31q40t6q3n.jpg)
+
+![企业微信截图_16027489266827](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjq7xgtdtlj319406jq3p.jpg)
+
 
 ## 10、环境管理
 
