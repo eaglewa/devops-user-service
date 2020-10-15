@@ -163,12 +163,9 @@
                             <destFile>
                                 ${project.build.directory}/coverage-reports/jacoco.exec
                             </destFile>
-                            <excludes>
-                                <exclude>com/baixing/user/config/**</exclude>
-                                <exclude>com/baixing/user/controller/**</exclude>
-                                <exclude>com/baixing/user/dao/**</exclude>
-                                <exclude>com/baixing/user/entity/**</exclude>
-                            </excludes>
+                            <includes>
+                                <include>com/baixing/user/service/**/*.class</include>
+                            </includes>
                             <!-- rules里面指定覆盖规则 -->
                             <!--                    <rules>-->
                             <!--                        <rule implementation="org.jacoco.maven.RuleConfiguration">-->
