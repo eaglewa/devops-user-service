@@ -8,7 +8,8 @@ stages:
   - build
   - deploy
   - test
-  - release
+  - tags
+  - realease
   - clean
 
 compile:
@@ -179,11 +180,45 @@ online test:
     - echo ${testResult} ;
     - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
 
+tag master branch:
+  stage: tags
+  only: 
+    - master
+  script:
+    - git config user.email "baixingwang"
+    - git config user.name "baixingwang@baixing.com"
+    - git remote add origin https://baixingwang:$CI_PASSWORD@gitlab.com/baixingwang/devops-user-service.git
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
+    - git checkout master
+    - git tag -a "$VERSION" -m "Auto-Release"
+    - git push origin master
+
+tag master image:
+  stage: tags
+  image: docker
+  script:
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oE '\d.*\d.*\d')
+    - echo $VERSION
+    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
+    - RELEASE_IMAGE=$REGISTRY_BASE:v$VERSION
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker pull $IMAGE
+    - docker tag $IMAGE $RELEASE_IMAGE
+    - docker push $RELEASE_IMAGE
+    - docker rmi $IMAGE $RELEASE_IMAGE
+  only:
+    - master
+  tags:
+    - baixingwang
+  
 deploy to prod:
-  stage: release
+  stage: realease
   image:
     name: smartive/kustomize:kustomize-v3.8.1_kubectl-v1.18.6
     entrypoint: [""]
+  dependencies:
+    - tag master branch
+    - tag master image
   before_script:
     - git remote set-url origin https://baixingwang:$CI_PASSWORD@gitlab.com/baixingwang/devops-cd.git
     - git config --global user.name "baixingwang"
@@ -193,7 +228,10 @@ deploy to prod:
     - cd /opt/devops-cd
     - git pull
     - cd /opt/devops-cd/devops-user-service
-    - kustomize edit set image $IMAGE_REF
+    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oE '\d.*\d.*\d')
+    - echo $VERSION
+    - IMAGE=$REGISTRY_BASE:v$VERSION
+    - kustomize edit set image $IMAGE
     - git commit -am 'image update'
     - git push origin master
   only:
