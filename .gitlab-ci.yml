@@ -230,9 +230,6 @@ deploy to prod:
   image:
     name: smartive/kustomize:kustomize-v3.8.1_kubectl-v1.18.6
     entrypoint: [""]
-  dependencies:
-    - tag branch
-    - tag image
   before_script:
     - git remote set-url origin https://baixingwang:$CI_PASSWORD@gitlab.com/baixingwang/devops-cd.git
     - git config --global user.name "baixingwang"
