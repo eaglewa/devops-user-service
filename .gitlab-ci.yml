@@ -185,13 +185,13 @@ tag branch:
   only: 
     - master
   script:
-    - git config user.email "baixingwang"
-    - git config user.name "baixingwang@baixing.com"
-    - git remote add api-origin https://baixingwang:$CI_PASSWORD@gitlab.com/baixingwang/devops-user-service.git
+    - git config --global user.name "baixingwang"
+    - git config --global user.email "baixingwang@baixing.com"
+    - git remote set-url origin https://baixingwang:$CI_PASSWORD@gitlab.com/baixingwang/devops-user-service.git
     - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
     - git checkout master
     - git tag -a "$VERSION" -m "Auto-Release"
-    - git push api-origin master
+    - git push origin master
 
 tag image:
   stage: tags
