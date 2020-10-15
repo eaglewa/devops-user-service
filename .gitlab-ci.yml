@@ -9,7 +9,6 @@ stages:
   - deploy
   - test
   - tags
-  - realease
   - clean
 
 compile:
@@ -20,6 +19,10 @@ compile:
     - mvn -U compile
     - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)')
     - echo $VERSION
+  only:
+    - /^feature-.*/
+    - master
+    - dev
   cache:
     paths:
       - .m2
@@ -52,6 +55,10 @@ sonar:
       -Dsonar.jacoco.reportMissing.force.zero=true
       -Dsonar.jacoco.reportPaths=$PWD/devops-user-service/coverage-reports/jacoco.exec
   allow_failure: true
+  only:
+    - /^feature-.*/
+    - master
+    - dev
 
 maven package:
   stage: package
@@ -61,6 +68,10 @@ maven package:
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U package -Dmaven.test.skip=true
+  only:
+    - /^feature-.*/
+    - master
+    - dev
   artifacts:
     paths:
       - target/app.jar
@@ -80,6 +91,10 @@ docker build:
     - docker build -t $IMAGE .
     - docker push $IMAGE
     - docker rmi $IMAGE
+  only:
+    - /^feature-.*/
+    - master
+    - dev
   tags:
     - baixingwang
 
@@ -211,7 +226,7 @@ tag image:
     - baixingwang
   
 deploy to prod:
-  stage: realease
+  stage: deploy
   image:
     name: smartive/kustomize:kustomize-v3.8.1_kubectl-v1.18.6
     entrypoint: [""]
