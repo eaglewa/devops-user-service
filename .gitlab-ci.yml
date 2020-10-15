@@ -8,6 +8,8 @@ stages:
   - build
   - deploy
   - test
+  - release
+  - clean
 
 compile:
   stage: compile
@@ -178,7 +180,7 @@ online test:
     - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
 
 deploy to prod:
-  stage: deploy
+  stage: release
   image:
     name: smartive/kustomize:kustomize-v3.8.1_kubectl-v1.18.6
     entrypoint: [""]
@@ -200,3 +202,12 @@ deploy to prod:
     name: prod
     url: http://prod-devops.baixing.cn:8088/
 
+clean:
+  stage: clean
+  image:
+    name: bitnami/kubectl:1.14
+    entrypoint: [""]
+  script:
+    - echo "清理环境..."
+  only:
+    - master
