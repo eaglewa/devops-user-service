@@ -26,11 +26,23 @@ spring:
     request-context-attribute: request
     charset: UTF-8
 
+
 management:
+  endpoint:
+    health:
+      show-details: always
+    refresh:
+      enabled: true
+    restart:
+      enabled: true
   endpoints:
     web:
       exposure:
-        include: *
+        include: health, metrics, info, prometheus
+  health:
+    probes:
+      enabled: true
+
 
 ---
 spring:

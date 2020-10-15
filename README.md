@@ -394,7 +394,9 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 11.1、日志
 
+通过Fluntd采集日志文件，并输出到ES集群中，研发人员通过kibana可以查询对应服务的日志
 
+![image-20201015145540865](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjq0xf5kbsj31gm0muai7.jpg)
 
 ### 11.2、Metrics
 
