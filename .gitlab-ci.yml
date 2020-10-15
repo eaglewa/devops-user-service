@@ -51,7 +51,8 @@ sonar:
       - .sonar/cache
       - .m2
   script:
-    - mvn -U compile sonar:sonar
+    - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
+    - mvn verify sonar:sonar
       -Dmaven.test.skip=true
       -Dsonar.host.url=http://39.100.144.36
       -Dsonar.projectKey=devops-user-service
