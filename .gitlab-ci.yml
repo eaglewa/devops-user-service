@@ -189,7 +189,6 @@ tag branch:
     - git config --global user.email "baixingwang@baixing.com"
     - git remote set-url origin https://baixingwang:$CI_PASSWORD@gitlab.com/baixingwang/devops-user-service.git
     - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
-    - git checkout master
     - git tag -a "$VERSION" -m "Auto-Release"
     - git push origin master
 
