@@ -47,6 +47,8 @@ sonar:
       -Dsonar.host.url=http://39.100.144.36
       -Dsonar.projectKey=devops-user-service
       -Dsonar.dynamicAnalysis=reuseReports
+      -Dsonar.jacoco.reportMissing.force.zero=true
+      -Dsonar.jacoco.reportPaths=$PWD/devops-user-service/coverage-reports/jacoco.exec
   allow_failure: true
 
 maven package:
