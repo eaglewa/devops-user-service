@@ -22,7 +22,7 @@ compile:
   only:
     - /^feature-.*/
     - master
-    - dev
+    - release
   cache:
     paths:
       - .m2
@@ -58,7 +58,7 @@ sonar:
   only:
     - /^feature-.*/
     - master
-    - dev
+    - release
 
 maven package:
   stage: package
@@ -71,7 +71,7 @@ maven package:
   only:
     - /^feature-.*/
     - master
-    - dev
+    - release
   artifacts:
     paths:
       - target/app.jar
@@ -91,7 +91,7 @@ docker build:
   only:
     - /^feature-.*/
     - master
-    - dev
+    - release
   tags:
     - baixingwang
 
@@ -127,7 +127,7 @@ deploy to test:
   script: 
     - kubectl set image deployment/test-devops-user-service devops-user-service=$IMAGE_REF
   only:
-    - dev
+    - release
   environment:
     name: test
     url: http://test-devops.baixing.cn:8088
@@ -135,7 +135,7 @@ deploy to test:
 integrate test:
   stage: test
   only:
-    - dev
+    - release
   dependencies:
     - deploy to test
   script:
@@ -146,7 +146,7 @@ integrate test:
 stress test:
   stage: test
   only:
-    - dev
+    - release
   dependencies:
     - deploy to test
   script:
