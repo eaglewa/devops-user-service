@@ -200,7 +200,7 @@ tag image:
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker pull $IMAGE_REF
-    - RELEASE_IMAGE="Release_$(date +%Y%m%d%H%M)"
+    - RELEASE_IMAGE=REGISTRY_BASE:Release_$(date +%Y%m%d%H%M)
     - docker tag $IMAGE_REF $RELEASE_IMAGE
     - docker push $RELEASE_IMAGE
     - docker rmi $IMAGE_REF $RELEASE_IMAGE
