@@ -1,15 +1,74 @@
 # DevOps比赛项目说明
 
+[![pipeline status](https://gitlab.com/baixingwang/devops-user-service/badges/master/pipeline.svg)](https://gitlab.com/baixingwang/devops-user-service/-/commits/master) [![coverage report](https://gitlab.com/baixingwang/devops-user-service/badges/master/coverage.svg)](https://gitlab.com/baixingwang/devops-user-service/-/commits/master)
+
 [TOC]
 
 ## 1、总体说明
 
 ### 1.1、项目说明
 
+本项目是百姓网DevOps团队基于现有工作提炼出来的相对表完整的流水线，项目功能是一个简单的用户信息的增删改查，采用SpringBoot框架开发，数据库采用H2。
+
+对应的API为：
+
+| API列表  |           路径           | 请求方式 |              参数说明              |
+| :------: | :----------------------: | :------: | :--------------------------------: |
+| 项目首页 |            /             |   GET    |                 无                 |
+| 查询用户 |      api/user/list       |   GET    |                 无                 |
+| 新增用户 |     api/user/create      |   POST   | {   "name": "messi",   "age": 30 } |
+| 更新用户 |     api/user/update      |   POST   |     {   "id": 1,   "age": 40 }     |
+| 删除用户 | api/user/remove?id=${id} |   POST   |          ${id}代表用户id           |
+
+产线环境为：http://prod-devops.baixing.cn:8088/
+
+![image-20201015100933256](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpsnnz50fj30w507j0t8.jpg)
+
 ### 1.2、团队介绍
+
+百姓网DevOps团队成员介绍：
+
+- 王翱
+- 李如磊
+- 高榕
+- 王东兴
+- 虞伟
 
 ### 1.3、流水线说明
 
+
+
+### 1.4、工具链
+
+介绍下本次演示所使用到的工具链和对应的访问地址
+
+- 基础环境：
+  - EKS
+  - ElasticStack：https://8a639b1c32ea43df8f6d9157eb6e2ef8.ap-southeast-1.aws.found.io:9243/app/apm#/services?rangeFrom=now-15m&rangeTo=now
+
+- 代码
+  - 技术框架：SpringBoot
+  - 数据库：H2
+- 持续集成
+  - 代码版本库：Gitlab：https://gitlab.com/baixingwang/devops-user-service
+  - 编译工具：Maven
+  - 代码质控：Sonar
+  - 单侧覆盖度：Jacoco
+  - 制品管理：Nexus
+  - 项目管理：TAPD
+  - 接口测试：Yapi
+  - 性能测试：Jmeter
+- 持续部署
+  - 容器技术：Docker
+  - 容器声明管理：Kustomize
+  - 部署工具：ArgoCD
+  - 灰度发布：Flagger
+  - 可视化度量：Prometheus+Grafana
+  - 全链路：Elastic APM
+
+### 1.5、演示说明
+
+以下会从**十个维度**对整个流水线运行过程进行详细说明并附上关键截图，供各位参考
 
 
 ## 2、需求管理
@@ -68,9 +127,9 @@
 
 ### 3.3、代码审查
 
-【TODO】
+上线发版时需要将代码合并入master分支，此时需要人工进行代码审核，确认无误后进行发布线上流程，此步骤也是本次演示中唯一的人工介入的部分
 
-
+![image-20201014172731484](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjozp2qhb6j30rw0fjq4s.jpg)
 
 ## 4、制品管理
 
@@ -204,16 +263,33 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 ![image-20201013141301548](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnogcqnsqj31ei0bognl.jpg)
 
 ## 7、自动化测试
-
 ### 7.1、测试计划
+测试计划使用TAPD平台进行管理，关联需求、用例及缺陷。
+![image-testplan](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp0s70dzlj31a10es41u.jpg)
 
 ### 7.2、单元测试和覆盖度
 
+针对service层做单元测试，并通过Jacoco生成单元测试覆盖度报告
+
+![image-20201014182820445](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp1gbf9xrj30xk04qjs5.jpg)
+
+同时在【ReadME】文件中生成覆盖度标签
+
+![image-20201014183146276](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp1jw1oqdj30ct037jri.jpg)
+
 ### 7.3、接口测试
+![image-20201015112907155](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpuyg89hej30zi0b6gqf.jpg)
+使用YPAI平台进行接口协议管理及自动化用例执行，其他依赖前置后置操作能力，由自研服务支持。
+![image-interface](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp0yvicmqj31870liq5t.jpg)
 
 ### 7.4、性能测试
+基于jmeter自研性能测试平台，进行性能测试。
+![image-stress](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp10x7y54j30t708gjsl.jpg)
+![image-20201015113017795](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpv07tgg1j31000ejwi1.jpg)
 
 ### 7.5、测试报告
+使用TAPD做测试报告数据收集及发送。
+![image-report](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp123hqzkj31c80f7jul.jpg)
 
 ## 8、代码质量管控
 
@@ -245,9 +321,37 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 9.1、自动化
 
+代码提交变更后自动触发流水线，流水线的整个生命周期中只有上线合并代码的确认环节需要人为干预，其他均为自动化处理
+
+![image-20201014135600476](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjotl1dxadj30cz06b3z0.jpg)
+
 ### 9.2、多环境
 
-本次项目受限于机器数量，多环境通过k8s的namespace进行模拟
+本次演示包括四个环境：
+
+- 开发环境
+- 测试环境
+- 预发布环境
+- 产线环境
+
+具体说明见【第10部分】
+
+### 9.3、应用和配置分离
+
+项目部署在k8s中，配置可以通过ConfigMap来进行读取，做到应用和配置分离的效果
+
+### 9.4、可视化
+
+在Gitlab中可以展示流水线先的DAG图
+
+![image-20201015120152131](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpvwixtpxj31270hxjt3.jpg)
+### 9.5、灰度发布
+
+## 10、环境管理
+
+### 10.1、环境确定
+
+本次演示项目准备了四个环境，以下是环境说明和访问地址
 
 |       环境        |                说明                |          访问地址           |
 | :---------------: | :--------------------------------: | :-------------------------: |
@@ -256,23 +360,13 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 | 预发布环境（stg） |  上线前的回归，和真实环境基本一致  | stg-devops.baixing.cn:8088  |
 | 产线环境（prod）  |            最终产线环境            | prod-devops.baixing.cn:8088 |
 
+### 10.2、环境交付
+
+由于机器数量的限制，环境交付采用k8s的namespace做逻辑隔离
+
 ![企业微信截图_63aac2d6-c729-4df3-bf44-1806b776264d](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjorjygr1aj30k803yq3b.jpg)
 
-### 9.3、应用和配置分离
-
-
-
-### 9.4、可视化
-
-
-
-### 9.5、灰度发布
-
-## 10、环境管理
-
-### 10.1、环境确定
-
-### 10.2、环境交付
+## 
 
 ## 11、度量可视化
 
@@ -280,6 +374,24 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 11.1、日志
 
+
+
 ### 11.2、Metrics
 
+埋点数据指标通过Prometheus+Grafana进行展示，可以进行自定义
+
+![image-20201015095040818](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps413kvej31em0gttbr.jpg)
+
+同时数据会进入ElasticStack中，通过Kibina进行展示
+
+![image-20201015095209548](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps5k2nm0j31ge0okq77.jpg)
+
+![image-20201015095227567](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps5vaqumj31gy0rf77q.jpg)
+
 ### 11.3、Tracing
+
+链路追踪依赖APM组件，在Kibana中进行展示
+
+![image-20201015095340138](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps74s019j318v09kabb.jpg)
+
+![image-20201015095304146](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps6ic17tj313d0lpjtd.jpg)
