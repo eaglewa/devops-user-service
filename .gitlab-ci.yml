@@ -206,7 +206,8 @@ tag master image:
     - docker tag $IMAGE $RELEASE_IMAGE
     - docker push $RELEASE_IMAGE
     - docker rmi $IMAGE $RELEASE_IMAGE
-  only: master
+  only:
+    - master
   tags:
     - baixingwang
   
