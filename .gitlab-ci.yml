@@ -97,7 +97,7 @@ deploy to dev:
     url: http://dev-devops.baixing.cn:8088
 
 smoke test:
-  stage: intergrateTest
+  stage: test
   only:
     - /^feature-.*/
   dependencies:
@@ -167,7 +167,7 @@ deploy to stg:
     url: http://stg-devops.baixing.cn:8088
 
 online test:
-  stage: intergrateTest
+  stage: test
   only:
     - master
   dependencies:
