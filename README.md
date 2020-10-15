@@ -36,7 +36,26 @@
 
 ### 1.3、流水线说明
 
+- 分支策略
 
+  - 采用小步快跑的模式
+  - 在流程设计上，master 作为发布分支，release-* 为提测分支，提测分支是短期的
+  - 在 release 测试过程中，发现某个 feature 的 bug， 直接从 release 分支 checkout 出来进行修复，并再次合入 release
+
+  ![img](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpz1vja66j30ky0kbmyz.jpg)
+
+- 流水线说明
+
+  流水线包含以下几个步骤：
+
+  - 编译
+  - 代码检查 && 单元测试
+  - 生成可执行文件并提交
+  - 生成镜像文件并提交
+  - 部署对应环境
+  - 自动化测试
+  - 发布生产（该步骤只在上线时启用）
+  - 清理 && TAG
 
 ### 1.4、工具链
 
@@ -54,12 +73,12 @@
   - 编译工具：Maven
   - 代码质控：Sonar
   - 单侧覆盖度：Jacoco
-  - 制品管理：Nexus
+  - 制品管理：nexus
   - 项目管理：TAPD
   - 接口测试：Yapi
   - 性能测试：Jmeter
 - 持续部署
-  - 容器技术：Docker
+  - 容器技术：docker
   - 容器声明管理：Kustomize
   - 部署工具：ArgoCD
   - 灰度发布：Flagger
@@ -69,7 +88,6 @@
 ### 1.5、演示说明
 
 以下会从**十个维度**对整个流水线运行过程进行详细说明并附上关键截图，供各位参考
-
 
 ## 2、需求管理
 
@@ -345,7 +363,9 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 在Gitlab中可以展示流水线先的DAG图
 
 ![image-20201015120152131](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpvwixtpxj31270hxjt3.jpg)
+
 ### 9.5、灰度发布
+
 
 ## 10、环境管理
 
@@ -374,7 +394,9 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 11.1、日志
 
+通过Fluntd采集日志文件，并输出到ES集群中，研发人员通过kibana可以查询对应服务的日志
 
+![image-20201015145540865](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjq0xf5kbsj31gm0muai7.jpg)
 
 ### 11.2、Metrics
 
