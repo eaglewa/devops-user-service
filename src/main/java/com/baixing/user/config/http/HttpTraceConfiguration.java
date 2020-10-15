@@ -24,7 +24,7 @@ public class HttpTraceConfiguration {
         public FilterRegistrationBean httpTraceLogFilter() {
             FilterRegistrationBean<HttpTraceLogFilter> registration = new FilterRegistrationBean<>();
             registration.setFilter(new HttpTraceLogFilter());
-            registration.addUrlPatterns("/*");
+            registration.addUrlPatterns("/api/*");
             registration.setName("httpTraceLogFilter");
             registration.setOrder(Ordered.LOWEST_PRECEDENCE - 10);
             return registration;
