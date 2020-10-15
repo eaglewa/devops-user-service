@@ -410,7 +410,7 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ![image-20201015095040818](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps413kvej31em0gttbr.jpg)
 
-同时数据会进入ElasticStack中，通过Kibina进行展示
+同时数据会进入ElasticStack中，通过Kibana进行展示
 
 ![image-20201015095209548](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps5k2nm0j31ge0okq77.jpg)
 
