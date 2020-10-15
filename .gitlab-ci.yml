@@ -7,8 +7,7 @@ stages:
   - package
   - build
   - deploy
-  - intergrateTest
-  - stressTest
+  - test
 
 compile:
   stage: compile
@@ -125,7 +124,7 @@ deploy to test:
     url: http://test-devops.baixing.cn:8088
 
 integrate test:
-  stage: intergrateTest
+  stage: test
   only:
     - dev
   dependencies:
@@ -136,7 +135,7 @@ integrate test:
     - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
 
 stress test:
-  stage: stressTest
+  stage: test
   only:
     - dev
   dependencies:
