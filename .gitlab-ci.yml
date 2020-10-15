@@ -45,6 +45,7 @@ sonar:
   cache:
     paths:
       - .sonar/cache
+      - .m2
   script:
     - mvn verify sonar:sonar
       -Dmaven.test.skip=true
