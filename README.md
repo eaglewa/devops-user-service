@@ -344,8 +344,7 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 在Gitlab中可以展示流水线先的DAG图
 
-![image-20201015110631963](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpuay6hi5j318r0jcwgk.jpg)
-
+![image-20201015120152131](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpvwixtpxj31270hxjt3.jpg)
 ### 9.5、灰度发布
 
 ## 10、环境管理
