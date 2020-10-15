@@ -278,12 +278,14 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 ![image-20201014183146276](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp1jw1oqdj30ct037jri.jpg)
 
 ### 7.3、接口测试
+![image-20201015112907155](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpuyg89hej30zi0b6gqf.jpg)
 使用YPAI平台进行接口协议管理及自动化用例执行，其他依赖前置后置操作能力，由自研服务支持。
 ![image-interface](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp0yvicmqj31870liq5t.jpg)
 
 ### 7.4、性能测试
 基于jmeter自研性能测试平台，进行性能测试。
 ![image-stress](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp10x7y54j30t708gjsl.jpg)
+![image-20201015113017795](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpv07tgg1j31000ejwi1.jpg)
 
 ### 7.5、测试报告
 使用TAPD做测试报告数据收集及发送。
