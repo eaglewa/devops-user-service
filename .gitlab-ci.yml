@@ -1,5 +1,6 @@
 variables:
   REGISTRY_BASE: registry.gitlab.com/baixingwang/devops-user-service
+  IMAGE_REF: $REGISTRY_BASE:$CI_PIPELINE_ID
 
 stages:
   - compile
@@ -9,6 +10,7 @@ stages:
   - deploy
   - test
   - tags
+  - release
   - clean
 
 compile:
@@ -17,12 +19,10 @@ compile:
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
     - mvn -U compile
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP  '(?<=>).*(?=<)')
-    - echo $VERSION
   only:
     - /^feature-.*/
     - master
-    - dev
+    - release
   cache:
     paths:
       - .m2
@@ -58,7 +58,7 @@ sonar:
   only:
     - /^feature-.*/
     - master
-    - dev
+    - release
 
 maven package:
   stage: package
@@ -71,7 +71,7 @@ maven package:
   only:
     - /^feature-.*/
     - master
-    - dev
+    - release
   artifacts:
     paths:
       - target/app.jar
@@ -84,17 +84,14 @@ docker build:
   stage: build
   image: docker
   script:
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oE '\d.*\d.*\d')
-    - echo $VERSION
-    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker build -t $IMAGE .
-    - docker push $IMAGE
-    - docker rmi $IMAGE
+    - docker build -t $IMAGE_REF .
+    - docker push $IMAGE_REF
+    - docker rmi $IMAGE_REF
   only:
     - /^feature-.*/
     - master
-    - dev
+    - release
   tags:
     - baixingwang
 
@@ -104,10 +101,7 @@ deploy to dev:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
   script:
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
-    - echo $VERSION
-    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
-    - kubectl set image deployment/dev-devops-user-service devops-user-service=$IMAGE
+    - kubectl set image deployment/dev-devops-user-service devops-user-service=$IMAGE_REF
   only:
     - /^feature-.*/
   environment:
@@ -131,12 +125,9 @@ deploy to test:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
   script: 
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
-    - echo $VERSION
-    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
-    - kubectl set image deployment/test-devops-user-service devops-user-service=$IMAGE
+    - kubectl set image deployment/test-devops-user-service devops-user-service=$IMAGE_REF
   only:
-    - dev
+    - release
   environment:
     name: test
     url: http://test-devops.baixing.cn:8088
@@ -144,7 +135,7 @@ deploy to test:
 integrate test:
   stage: test
   only:
-    - dev
+    - release
   dependencies:
     - deploy to test
   script:
@@ -155,7 +146,7 @@ integrate test:
 stress test:
   stage: test
   only:
-    - dev
+    - release
   dependencies:
     - deploy to test
   script:
@@ -174,10 +165,7 @@ deploy to stg:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
   script:
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
-    - echo $VERSION
-    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID 
-    - kubectl set image deployment/stg-devops-user-service devops-user-service=$IMAGE
+    - kubectl set image deployment/stg-devops-user-service devops-user-service=$IMAGE_REF
   only:
     - master
   environment:
@@ -196,37 +184,33 @@ online test:
     - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
 
 tag branch:
-  stage: tags
+  stage: clean
   only: 
     - master
   script:
     - git config --global user.name "baixingwang"
     - git config --global user.email "baixingwang@baixing.com"
     - git remote set-url origin https://baixingwang:$CI_PASSWORD@gitlab.com/baixingwang/devops-user-service.git
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oP '\d.*\d.*\d')
-    - git tag -a "$VERSION" -m "Auto-Release"
-    - git push origin "$VERSION"
+    - git tag -a "Release_$(date +%Y%m%d%H%M)" -m "Auto-Release"
+    - git push origin "Release_$(date +%Y%m%d%H%M)"
 
 tag image:
   stage: tags
   image: docker
   script:
-    - VERSION=$(grep -m1 '<version>' pom.xml | grep -oE '\d.*\d.*\d')
-    - echo $VERSION
-    - IMAGE=$REGISTRY_BASE:v$VERSION-$CI_PIPELINE_ID
-    - RELEASE_IMAGE=$REGISTRY_BASE:v$VERSION
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker pull $IMAGE
-    - docker tag $IMAGE $RELEASE_IMAGE
+    - docker pull $IMAGE_REF
+    - RELEASE_IMAGE="Release_$(date +%Y%m%d%H%M)"
+    - docker tag $IMAGE_REF $RELEASE_IMAGE
     - docker push $RELEASE_IMAGE
-    - docker rmi $IMAGE $RELEASE_IMAGE
+    - docker rmi $IMAGE_REF $RELEASE_IMAGE
   only:
     - master
   tags:
     - baixingwang
   
 deploy to prod:
-  stage: deploy
+  stage: release
   image:
     name: smartive/kustomize:kustomize-v3.8.1_kubectl-v1.18.6
     entrypoint: [""]
@@ -246,7 +230,7 @@ deploy to prod:
     - git commit -am 'image update'
     - git push origin master
   only:
-    - tags
+    - master
   environment:
     name: prod
     url: http://prod-devops.baixing.cn:8088/
