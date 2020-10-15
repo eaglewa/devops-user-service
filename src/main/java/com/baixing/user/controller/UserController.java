@@ -41,6 +41,7 @@ public class UserController {
     
     @GetMapping("list")
     public List<User> list() {
+        log.info("list");
         return service.list();
     }
     
