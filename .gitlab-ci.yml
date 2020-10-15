@@ -219,7 +219,7 @@ deploy to prod:
     - git config --global user.name "baixingwang"
     - git config --global user.email "baixingwang@baixing.com"
   script:
-    - git remote set-url origin https://baixingwang:$CI_PASSWORD@gitlab.com/baixingwang/devops-cd.git /opt/devops-cd
+    - git clone https://baixingwang:$CI_PASSWORD@gitlab.com/baixingwang/devops-cd.git
     - cd /opt/devops-cd
     - git pull
     - cd /opt/devops-cd/devops-user-service
