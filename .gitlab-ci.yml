@@ -56,9 +56,10 @@ sonar:
       -Dmaven.test.skip=true
       -Dsonar.host.url=http://39.100.144.36
       -Dsonar.projectKey=devops-user-service
+      -Dsonar.core.codeCoveragePlugin=jacoco
       -Dsonar.dynamicAnalysis=reuseReports
       -Dsonar.jacoco.reportMissing.force.zero=true
-      -Dsonar.jacoco.reportPaths=$PWD/devops-user-service/coverage-reports/jacoco.exec
+      -Dsonar.jacoco.reportPaths=target/jacoco.exec
   allow_failure: true
   only:
     - /^feature-.*/
