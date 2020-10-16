@@ -31,7 +31,7 @@ uni-test:
   image: maven:3.6.3-adoptopenjdk-11
   script:
     - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
-    - mvn clean test && cat target/site/jacoco/index.html
+    - mvn clean test && cat target/jacoco/index.html
   only:
     - /^feature-.*/
     - master

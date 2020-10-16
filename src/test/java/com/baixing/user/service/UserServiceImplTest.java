@@ -34,7 +34,7 @@ class UserServiceImplTest {
         User u = user.get();
         assertEquals("张三", u.getName());
     }
-    
+
     @Test
     @Transactional
     void create() {
@@ -45,7 +45,7 @@ class UserServiceImplTest {
         List<User> users = service.list();
         assertEquals(4, users.size());
     }
-    
+
     @Test
     @Transactional
     void update() {
@@ -57,7 +57,7 @@ class UserServiceImplTest {
         User u = user.get();
         assertEquals(30, u.getAge());
     }
-    
+
     @Test
     @Transactional
     void remove() {
