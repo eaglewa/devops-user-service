@@ -1,4 +1,4 @@
-# DevOps比赛项目说明
+# DevOps流水线
 
 [![pipeline status](https://gitlab.com/baixingwang/devops-user-service/badges/master/pipeline.svg)](https://gitlab.com/baixingwang/devops-user-service/-/commits/master) [![coverage report](https://gitlab.com/baixingwang/devops-user-service/badges/master/coverage.svg)](https://gitlab.com/baixingwang/devops-user-service/-/commits/master)
 
@@ -289,11 +289,11 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 针对service层做单元测试，并通过Jacoco生成单元测试覆盖度报告
 
-![image-20201014182820445](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp1gbf9xrj30xk04qjs5.jpg)
+![image-20201016150925063](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjr6y0zlthj310b059aai.jpg)
 
 同时在【ReadME】文件中生成覆盖度标签
 
-![image-20201014183146276](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp1jw1oqdj30ct037jri.jpg)
+![image-20201016150947186](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjr6yc9vvbj30c002rdfx.jpg)
 
 ### 7.3、接口测试
 ![image-20201015112907155](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpuyg89hej30zi0b6gqf.jpg)
