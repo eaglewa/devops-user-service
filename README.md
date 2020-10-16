@@ -73,12 +73,12 @@
   - 编译工具：Maven
   - 代码质控：Sonar
   - 单侧覆盖度：Jacoco
-  - 制品管理：nexus
+  - 制品管理：Nexus
   - 项目管理：TAPD
   - 接口测试：Yapi
   - 性能测试：Jmeter
 - 持续部署
-  - 容器技术：docker
+  - 容器技术：Docker
   - 容器声明管理：Kustomize
   - 部署工具：ArgoCD
   - 灰度发布：Flagger
