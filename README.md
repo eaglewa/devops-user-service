@@ -199,8 +199,7 @@
 
 https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
-![image-20201013114339294](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnk4xmlwgj31420u0q8f.jpg)
-
+![image-20201016110755961](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqzyordb9j30rc0dbgmt.jpg)
 ### 5.2、模块级别复用
 
 在整个CI流程中，存在两种级别的复用：

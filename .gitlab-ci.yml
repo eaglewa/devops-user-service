@@ -59,8 +59,6 @@ sonar:
       -Dsonar.projectKey=devops-user-service
       -Dsonar.java.binaries=target/sonar
       -Dsonar.core.codeCoveragePlugin=jacoco
-      -Dsonar.dynamicAnalysis=reuseReports
-      -Dsonar.jacoco.reportMissing.force.zero=true
       -Dsonar.jacoco.reportPaths=target/jacoco.exec
   allow_failure: true
   only:
