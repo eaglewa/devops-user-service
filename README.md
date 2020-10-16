@@ -392,8 +392,6 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ![企业微信截图_63aac2d6-c729-4df3-bf44-1806b776264d](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjorjygr1aj30k803yq3b.jpg)
 
-## 
-
 ## 11、度量可视化
 
 本次项目最终线上监控采用【Metrics】+ 【Log】+ 【Tracing】
