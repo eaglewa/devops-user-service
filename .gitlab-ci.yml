@@ -83,9 +83,7 @@ jar build:
     - mvn $MAVEN_CLI_OPTS deploy
       -Dmaven.test.skip=true
   only:
-    - /^feature-.*/
     - master
-    - release
 
 docker build:
   stage: build
