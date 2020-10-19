@@ -1,7 +1,7 @@
 variables:
   REGISTRY_BASE: registry.gitlab.com/baixingwang/devops-user-service
   IMAGE_REF: $REGISTRY_BASE:$CI_PIPELINE_ID
-  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  MAVEN_CLI_OPTS: "-U -s .m2/settings.xml --batch-mode"
 
 stages:
   - deploy
@@ -18,7 +18,7 @@ deploy:
   stage: deploy
   image: maven:3.6.3-adoptopenjdk-11
   script:
-    - mvn MAVEN_CLI_OPTS deploy
+    - mvn $MAVEN_CLI_OPTS deploy
   only:
     - /^feature-.*/
     - master
