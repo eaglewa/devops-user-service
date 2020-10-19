@@ -1,4 +1,4 @@
-# DevOps流水线
+# DevOps流水线实践
 
 [![pipeline status](https://gitlab.com/baixingwang/devops-user-service/badges/master/pipeline.svg)](https://gitlab.com/baixingwang/devops-user-service/-/commits/master) [![coverage report](https://gitlab.com/baixingwang/devops-user-service/badges/master/coverage.svg)](https://gitlab.com/baixingwang/devops-user-service/-/commits/master)
 
@@ -20,7 +20,13 @@
 | 更新用户 |     api/user/update      |   POST   |     {   "id": 1,   "age": 40 }     |
 | 删除用户 | api/user/remove?id=${id} |   POST   |          ${id}代表用户id           |
 
-产线环境为：http://prod-devops.baixing.cn:8088/
+开发环境访问：http://dev-devops.baixing.cn:8088/
+
+测试环境访问：http://test-devops.baixing.cn:8088/
+
+预发环境访问：http://stg-devops.baixing.cn:8088/
+
+产线环境访问：http://prod-devops.baixing.cn:8088/
 
 ![image-20201015100933256](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpsnnz50fj30w507j0t8.jpg)
 
@@ -64,26 +70,26 @@
 - 基础环境：
   - EKS
   - ElasticStack：https://8a639b1c32ea43df8f6d9157eb6e2ef8.ap-southeast-1.aws.found.io:9243/app/apm#/services?rangeFrom=now-15m&rangeTo=now
-
 - 代码
   - 技术框架：SpringBoot
   - 数据库：H2
 - 持续集成
   - 代码版本库：Gitlab：https://gitlab.com/baixingwang/devops-user-service
   - 编译工具：Maven
-  - 代码质控：Sonar
+  - 代码质控：Sonar：http://39.100.144.36/projects
   - 单侧覆盖度：Jacoco
-  - 制品管理：Nexus
+  - 制品管理：JFrog：http://52.82.40.171:8082/ui/packages/gav:%2F%2Fcom.baixingwang:devops-user-service?name=devops&type=packages
   - 项目管理：TAPD
   - 接口测试：Yapi
   - 性能测试：Jmeter
 - 持续部署
   - 容器技术：Docker
   - 容器声明管理：Kustomize
-  - 部署工具：ArgoCD
+  - 部署工具：ArgoCD：https://a28216abd3b7343ff97a18868cd62626-894254263.cn-northwest-1.elb.amazonaws.com.cn:8888/applications
   - 灰度发布：Flagger
-  - 可视化度量：Prometheus+Grafana
-  - 全链路：Elastic APM
+- 可观测性
+  - 可视化度量：Prometheus+Grafana：http://ad853aa0d7e1c4e8aba01298e8753c3a-1552531560.cn-northwest-1.elb.amazonaws.com.cn:3000/d/vu8e0VWZk/istio-performance-dashboard?orgId=1&refresh=10s
+  - 全链路：Elastic APM：https://8a639b1c32ea43df8f6d9157eb6e2ef8.ap-southeast-1.aws.found.io:9243/app/apm#/services/devops-user-service/transactions?rangeFrom=now-15m&rangeTo=now&transactionType=request
 
 ### 1.5、演示说明
 
@@ -144,6 +150,7 @@
   - 完成测试流程后，合并到该分支进行上线部署
 
 ![image-20201016103056983](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqyw8332qj30t60ha40i.jpg)
+
 ### 3.3、代码审查
 
 上线发版时需要将代码合并入master分支，此时需要人工进行代码审核，确认无误后进行发布线上流程，此步骤也是本次演示中唯一的人工介入的部分
@@ -181,11 +188,11 @@
 
 发布版本号(RELEASE):此版本号用于标注当前版本的软件处于哪个发布阶段，当软件进入到发布阶段时需要修改此版本号
 
-![image-20201013105412847](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnipi5eagj31910u0tf7.jpg)
+![image-20201019135904596](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjulrq6z6uj31gq0fh40s.jpg)
 
 ### 4.3、依赖组件管理
 
- 代码中配置仓库地址，确保对应的依赖从制品库中进行下载，参考【pom.xml】
+ 代码中配置仓库地址，确保对应的依赖从制品库中进行下载，参考【pom.xml】
 
 ![image-20201013104735168](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjniilliu3j31kr0u0tdq.jpg)
 
@@ -200,6 +207,7 @@
 https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ![image-20201016110755961](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqzyordb9j30rc0dbgmt.jpg)
+
 ### 5.2、模块级别复用
 
 在整个CI流程中，存在两种级别的复用：
@@ -248,9 +256,9 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 6.2、触发机制
 
-提交代码变更后后自动触发，目前只允许研发人员提交dev分支，持续集成只适配dev分支
+提交代码变更后后自动触发，限定分支位feature分支
 
-![image-20201013135654526](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnnzkyvorj31b20l441d.jpg)
+![image-20201019140334105](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjulwd06foj30tb09o3zo.jpg)
 
 ### 6.3、集成结果推送
 
@@ -281,7 +289,9 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 ![image-20201013141301548](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnogcqnsqj31ei0bognl.jpg)
 
 ## 7、自动化测试
+
 ### 7.1、测试计划
+
 测试计划使用TAPD平台进行管理，关联需求、用例及缺陷。
 ![image-testplan](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp0s70dzlj31a10es41u.jpg)
 
@@ -296,16 +306,19 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 ![image-20201016150947186](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjr6yc9vvbj30c002rdfx.jpg)
 
 ### 7.3、接口测试
+
 ![image-20201015112907155](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpuyg89hej30zi0b6gqf.jpg)
 使用YPAI平台进行接口协议管理及自动化用例执行，其他依赖前置后置操作能力，由自研服务支持。
 ![image-interface](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp0yvicmqj31870liq5t.jpg)
 
 ### 7.4、性能测试
+
 基于jmeter自研性能测试平台，进行性能测试。
 ![image-stress](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp10x7y54j30t708gjsl.jpg)
 ![image-20201015113017795](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpv07tgg1j31000ejwi1.jpg)
 
 ### 7.5、测试报告
+
 使用TAPD做测试报告数据收集及发送。
 ![image-report](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp123hqzkj31c80f7jul.jpg)
 
@@ -313,7 +326,7 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 8.1、质控工具
 
-本次项目代码质量管控采用sonar，访问地址为：http://39.100.144.36
+本次项目代码质量管控采用Sonar
 
 ![image-20201014102547753](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjonibbvhuj311e0eqq4i.jpg)
 

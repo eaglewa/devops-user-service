@@ -4,7 +4,8 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>devops-user-service</artifactId>
-    <version>1.0.1</version>
+    <groupId>com.baixingwang</groupId>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <parent>
@@ -23,14 +24,30 @@
 
 <!--    <repositories>-->
 <!--        <repository>-->
-<!--            <id>baixing-snapshot</id>-->
-<!--            <url>http://nexus.baixing.cn/repository/maven-snapshots/</url>-->
+<!--            <id>central</id>-->
+<!--            <name>ip-172-31-128-67.cn-northwest-1.compute.internal-releases</name>-->
+<!--            <url>http://52.82.40.171:8081/artifactory/repo13661992232-maven-release-local</url>-->
 <!--        </repository>-->
 <!--        <repository>-->
-<!--            <id>baixing-release</id>-->
-<!--            <url>http://nexus.baixing.cn/repository/maven-releases/</url>-->
+<!--            <id>snapshots</id>-->
+<!--            <name>ip-172-31-128-67.cn-northwest-1.compute.internal-snapshots</name>-->
+<!--            <url>http://52.82.40.171:8081/artifactory/repo13661992232-maven-snapshot-local</url>-->
 <!--        </repository>-->
 <!--    </repositories>-->
+
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <name>ip-172-31-128-67.cn-northwest-1.compute.internal-releases</name>
+            <url>http://52.82.40.171:8081/artifactory/repo13661992232-maven-release-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>ip-172-31-128-67.cn-northwest-1.compute.internal-snapshots</name>
+            <url>http://52.82.40.171:8081/artifactory/repo13661992232-maven-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 
     <dependencyManagement>
         <dependencies>
