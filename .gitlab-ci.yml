@@ -1,6 +1,8 @@
 variables:
   REGISTRY_BASE: registry.gitlab.com/baixingwang/devops-user-service
   IMAGE_REF: $REGISTRY_BASE:$CI_PIPELINE_ID
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
 stages:
   - compile
@@ -12,33 +14,31 @@ stages:
   - release
   - clean
 
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+    - .sonar/cache
+
 compile:
   stage: compile
   image: maven:3.6.3-adoptopenjdk-11
   script:
-    - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
-    - mvn -U compile
+    - mvn $MAVEN_CLI_OPTS clean compile
   only:
     - /^feature-.*/
     - master
     - release
-  cache:
-    paths:
-      - .m2
 
 uni-test:
   stage: check
   image: maven:3.6.3-adoptopenjdk-11
   script:
-    - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
-    - mvn clean test && cat target/jacoco/index.html
+    - mvn $MAVEN_CLI_OPTS clean test && cat target/jacoco/index.html
   only:
     - /^feature-.*/
     - master
     - release
-  cache:
-    paths:
-      - .m2
 
 sonar:
   image: maven:3.6.3-adoptopenjdk-11
@@ -46,13 +46,8 @@ sonar:
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
     GIT_DEPTH: "0"
-  cache:
-    paths:
-      - .sonar/cache
-      - .m2
   script:
-    - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
-    - mvn sonar:sonar
+    - mvn $MAVEN_CLI_OPTS sonar:sonar
       -Dmaven.test.skip=true
       -Dsonar.host.url=http://39.100.144.36
       -Dsonar.projectKey=devops-user-service
@@ -71,8 +66,7 @@ maven package:
     - compile
   image: maven:3.6.3-adoptopenjdk-11
   script:
-    - export MAVEN_OPTS=-Dmaven.repo.local=$PWD/.m2/repository
-    - mvn -U package -Dmaven.test.skip=true
+    - mvn $MAVEN_CLI_OPTS package -Dmaven.test.skip=true
   only:
     - /^feature-.*/
     - master
@@ -81,9 +75,17 @@ maven package:
     paths:
       - target/app.jar
     expire_in: 12h
-  cache:
-    paths:
-      - .m2
+
+jar build:
+  stage: build
+  image: maven:3.6.3-adoptopenjdk-11
+  script:
+    - mvn $MAVEN_CLI_OPTS deploy
+      -Dmaven.test.skip=true
+  only:
+    - /^feature-.*/
+    - master
+    - release
 
 docker build:
   stage: build
@@ -99,6 +101,7 @@ docker build:
     - release
   tags:
     - baixingwang
+
 
 deploy to dev:
   stage: deploy
@@ -129,7 +132,7 @@ deploy to test:
   image:
     name: bitnami/kubectl:1.14
     entrypoint: [""]
-  script: 
+  script:
     - kubectl set image deployment/test-devops-user-service devops-user-service=$IMAGE_REF
   only:
     - release
@@ -187,7 +190,7 @@ online test:
     - testResult=$(curl -s "${api_host}id=${api_stagcase_id}&token=${api_token}&mode=json")
     - echo ${testResult} ;
     - if [[ ${testResult} =~ "全部验证通过" ]]; then  exit 0 ; else exit 1;  fi
-  
+
 deploy to prod:
   stage: release
   image:
@@ -220,10 +223,10 @@ clean:
     - echo "清理环境..."
   only:
     - master
-  
+
 tag branch:
   stage: clean
-  only: 
+  only:
     - master
   script:
     - git config --global user.name "baixingwang"
