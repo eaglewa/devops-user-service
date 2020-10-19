@@ -21,18 +21,18 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>ip-172-31-128-67.cn-northwest-1.compute.internal-releases</name>
-            <url>http://52.82.40.171:8081/artifactory/repo13661992232-maven-release-local</url>
-        </repository>
-        <repository>
-            <id>snapshots</id>
-            <name>ip-172-31-128-67.cn-northwest-1.compute.internal-snapshots</name>
-            <url>http://52.82.40.171:8081/artifactory/repo13661992232-maven-snapshot-local</url>
-        </repository>
-    </repositories>
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>central</id>-->
+<!--            <name>ip-172-31-128-67.cn-northwest-1.compute.internal-releases</name>-->
+<!--            <url>http://52.82.40.171:8081/artifactory/repo13661992232-maven-release-local</url>-->
+<!--        </repository>-->
+<!--        <repository>-->
+<!--            <id>snapshots</id>-->
+<!--            <name>ip-172-31-128-67.cn-northwest-1.compute.internal-snapshots</name>-->
+<!--            <url>http://52.82.40.171:8081/artifactory/repo13661992232-maven-snapshot-local</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 
     <distributionManagement>
         <repository>
