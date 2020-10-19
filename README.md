@@ -1,4 +1,4 @@
-# DevOps比赛项目说明
+# DevOps流水线
 
 [![pipeline status](https://gitlab.com/baixingwang/devops-user-service/badges/master/pipeline.svg)](https://gitlab.com/baixingwang/devops-user-service/-/commits/master) [![coverage report](https://gitlab.com/baixingwang/devops-user-service/badges/master/coverage.svg)](https://gitlab.com/baixingwang/devops-user-service/-/commits/master)
 
@@ -73,12 +73,12 @@
   - 编译工具：Maven
   - 代码质控：Sonar
   - 单侧覆盖度：Jacoco
-  - 制品管理：nexus
+  - 制品管理：Nexus
   - 项目管理：TAPD
   - 接口测试：Yapi
   - 性能测试：Jmeter
 - 持续部署
-  - 容器技术：docker
+  - 容器技术：Docker
   - 容器声明管理：Kustomize
   - 部署工具：ArgoCD
   - 灰度发布：Flagger
@@ -132,17 +132,18 @@
 
 ### 3.2、分支管理
 
-本次演示项目分支策略比较简单，采用【dev】-【master】两分支策略，简单说明如下：
+本次演示项目分支策略比较简单，采用【master】作为主干分支策略，简单说明如下：
 
-- dev分支
-  - 开发分支
+- feature分支
+  - 功能分支
+- release分支
+  - 提测分支
   - 编译、测试、单测覆盖度、代码质量、测试环境部署等均在该分支上进行
 - master分支
   - 部署分支
   - 完成测试流程后，合并到该分支进行上线部署
 
-![image-20201013103129578](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjni1uh8j8j31j40mydix.jpg)
-
+![image-20201016103056983](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqyw8332qj30t60ha40i.jpg)
 ### 3.3、代码审查
 
 上线发版时需要将代码合并入master分支，此时需要人工进行代码审核，确认无误后进行发布线上流程，此步骤也是本次演示中唯一的人工介入的部分
@@ -198,8 +199,7 @@
 
 https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
-![image-20201013114339294](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjnk4xmlwgj31420u0q8f.jpg)
-
+![image-20201016110755961](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqzyordb9j30rc0dbgmt.jpg)
 ### 5.2、模块级别复用
 
 在整个CI流程中，存在两种级别的复用：
@@ -289,11 +289,11 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 针对service层做单元测试，并通过Jacoco生成单元测试覆盖度报告
 
-![image-20201014182820445](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp1gbf9xrj30xk04qjs5.jpg)
+![image-20201016150925063](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjr6y0zlthj310b059aai.jpg)
 
 同时在【ReadME】文件中生成覆盖度标签
 
-![image-20201014183146276](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjp1jw1oqdj30ct037jri.jpg)
+![image-20201016150947186](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjr6yc9vvbj30c002rdfx.jpg)
 
 ### 7.3、接口测试
 ![image-20201015112907155](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjpuyg89hej30zi0b6gqf.jpg)
@@ -366,6 +366,12 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ### 9.5、灰度发布
 
+利用flagger组件进行灰度发布，灰度发布示意图和执行日志如下
+
+![img](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjq7yvytbnj31q40t6q3n.jpg)
+
+![企业微信截图_16027489266827](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjq7xgtdtlj319406jq3p.jpg)
+
 
 ## 10、环境管理
 
@@ -386,8 +392,6 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ![企业微信截图_63aac2d6-c729-4df3-bf44-1806b776264d](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjorjygr1aj30k803yq3b.jpg)
 
-## 
-
 ## 11、度量可视化
 
 本次项目最终线上监控采用【Metrics】+ 【Log】+ 【Tracing】
@@ -404,7 +408,7 @@ https://gitlab.com/baixingwang/devops-user-service/-/blob/master/.gitlab-ci.yml
 
 ![image-20201015095040818](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps413kvej31em0gttbr.jpg)
 
-同时数据会进入ElasticStack中，通过Kibina进行展示
+同时数据会进入ElasticStack中，通过Kibana进行展示
 
 ![image-20201015095209548](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjps5k2nm0j31ge0okq77.jpg)
 
