@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="ui container" style="margin-top: 10px; margin-bottom: 20px">
-  <h1>用户服务 -- 用于Devops流水线演示 -- test</h1>
+  <h1>用户服务 -- 用于Devops流水线演示</h1>
   <div>
     <h4 class="ui horizontal divider header">
       <i class="bar chart icon"></i>
