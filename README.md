@@ -63,7 +63,13 @@
   - 发布生产（该步骤只在上线时启用）
   - 清理 && TAG
 
-### 1.4、工具链
+### 1.4、部署交付
+
+部署采用Gitops相关的工作流进行实践，结合Gitlab和ArgoCD进行持续交付
+
+![GitOps Workflow](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjuz9ufd8jj30kz0ae3zo.jpg)
+
+### 1.5、工具链
 
 介绍下本次演示所使用到的工具链和对应的访问地址
 

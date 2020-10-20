@@ -54,7 +54,6 @@ sonar:
       -Dsonar.java.binaries=target/sonar
       -Dsonar.core.codeCoveragePlugin=jacoco
       -Dsonar.jacoco.reportPaths=target/jacoco.exec
-  allow_failure: true
   only:
     - /^feature-.*/
     - master
@@ -84,6 +83,7 @@ jar build:
       -Dmaven.test.skip=true
   only:
     - master
+  allow_failure: true
 
 docker build:
   stage: build

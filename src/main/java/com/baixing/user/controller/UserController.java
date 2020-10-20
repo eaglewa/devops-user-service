@@ -29,30 +29,34 @@ public class UserController {
     
     @PostMapping("create")
     public boolean create(@RequestBody SaveUserReq req) {
+        log.info("create user");
         service.create(req);
         return true;
     }
     
     @PostMapping("update")
     public boolean update(@RequestBody SaveUserReq req) {
+        log.info("update user");
         service.update(req);
         return true;
     }
     
     @GetMapping("list")
     public List<User> list() {
-        log.info("list");
+        log.info("list user");
         return service.list();
     }
     
     @GetMapping("{id}")
     public User get(@PathVariable("id") Long id) {
+        log.info("get user");
         return service.get(id).orElse(null);
     }
     
     
     @PostMapping("remove")
     public boolean remove(Long id) {
+        log.info("remove user");
         service.remove(id);
         return true;
     }
