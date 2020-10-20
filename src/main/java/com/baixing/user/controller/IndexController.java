@@ -28,6 +28,7 @@ public class IndexController {
     
     @RequestMapping("/")
     public String index() throws Exception {
+        log.info("index...");
         Template template = freeMarkerConfigurer.getConfiguration().getTemplate("index.ftl");
         List<User> users = service.list();
         Map<String, Object> model = Maps.newHashMap();
